@@ -83,6 +83,11 @@
             background-color: #ececec;
             transform: scale(1.02);
         }
+
+        .tarea:first-child {
+            margin-top: 10px;
+        }
+
         .alineado {
             display: flex;
             gap: var(--espaciado-mediano);
