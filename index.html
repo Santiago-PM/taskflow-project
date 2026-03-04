@@ -8,25 +8,25 @@
     </head>
     <style>
         :root {
-            --color-fondo: #E3DFCF;
-            --color-texto: #000000;
+           --color-fondo: #E3DFCF;
+           --color-texto: #000000;
            --color-titulo: #E3DFCF;
            --color-fondo-secundario: #c1c1c1;
            --color-fondo-titulo: #393939;
 
            --tamaño-letra-titulos: 2.2rem;
-          --tamaño-letra-subtitulos: 1.4rem;
+           --tamaño-letra-subtitulos: 1.4rem;
            --tamaño-texto: 0.9rem;
 
-          --fuente-letra-titulo: "Times New Roman", serif;
-          --fuente-letra-principal: "Open Sans", Arial, Verdana, Helvetica, sans-serif;
+           --fuente-letra-titulo: "Times New Roman", serif;
+           --fuente-letra-principal: "Open Sans", Arial, Verdana, Helvetica, sans-serif;
 
-          --espaciado-pequeño: 8px;
-          --espaciado-mediano: 16px;
-          --espaciado-grande: 24px;
+           --espaciado-pequeño: 8px;
+           --espaciado-mediano: 16px;
+           --espaciado-grande: 24px;
 
-          --radio-borde: 10px;
-          --radio-borde2: 22px;
+           --radio-borde: 10px;
+           --radio-borde2: 22px;
         }
 
         body {
@@ -78,10 +78,15 @@
             margin-bottom: var(--espaciado-pequeño);
             background-color: var(--color-fondo-secundario);
             border-radius: var(--radio-borde2);
+            transition: background-color 0.35s ease, transform 0.35s ease;
+        }
+        .tarea:hover {
+            background-color: #ececec;
+            transform: scale(1.02);
         }
         .alineado {
             display: flex;
-            gap: var(--espaciado-pequeño);
+            gap: var(--espaciado-mediano);
         }
 
         @media (max-width: 768px) {
@@ -103,7 +108,7 @@
 
                 <h2>Filtros</h2>
 
-                <div>
+                <div class="Filtros">
                     <p>Trabajo</p>
                     <p>Personal</p>
                     <p>Alta prioridad</p>
