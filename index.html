@@ -2,29 +2,136 @@
 <html lang="es">
 
     <head>
-        <title>Lista de Tareas</title>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Lista de Tareas</title>
     </head>
+    <style>
+        :root {
+            --color-fondo: #E3DFCF;
+            --color-texto: #000000;
+           --color-titulo: #E3DFCF;
+           --color-fondo-secundario: #c1c1c1;
+           --color-fondo-titulo: #393939;
+
+           --tamaño-letra-titulos: 2.2rem;
+          --tamaño-letra-subtitulos: 1.4rem;
+           --tamaño-texto: 0.9rem;
+
+          --fuente-letra-titulo: "Times New Roman", serif;
+          --fuente-letra-principal: "Open Sans", Arial, Verdana, Helvetica, sans-serif;
+
+          --espaciado-pequeño: 8px;
+          --espaciado-mediano: 16px;
+          --espaciado-grande: 24px;
+
+          --radio-borde: 10px;
+          --radio-borde2: 22px;
+        }
+
+        body {
+            font-family: var(--fuente-letra-principal);
+            color: var(--color-texto);
+            background-color: var(--color-fondo);
+            font-size: var(--tamaño-texto);
+        }
+
+        header h1 {
+            font-family: var(--fuente-letra-titulo);
+            font-size: var(--tamaño-letra-titulos);
+            background-color: var(--color-fondo-titulo);
+            color: var(--color-titulo);
+            border-radius: var(--radio-borde);
+            padding: var(--espaciado-pequeño);
+
+        }
+
+        section h2 {
+            display: flex;
+            font-size: var(--tamaño-letra-subtitulos);
+            padding: var(--espaciado-pequeño);
+            
+        }
+
+        p {
+            margin-bottom: var(--espaciado-pequeño);
+            
+        }
+
+        aside {
+            width: 150px;
+            background-color: var(--color-fondo-secundario);
+            border-radius: var(--radio-borde);
+            padding: var(--espaciado-pequeño);
+
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .tarea {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--espaciado-mediano);
+            margin-bottom: var(--espaciado-pequeño);
+            background-color: var(--color-fondo-secundario);
+            border-radius: var(--radio-borde2);
+        }
+        .alineado {
+            display: flex;
+            gap: var(--espaciado-pequeño);
+        }
+
+        @media (max-width: 768px) {
+            .alineado {
+                flex-direction: row;
+            }
+        }
+
+    </style>
 
     <body>
 
         <header>
-            <h1>Lista de Tareas</h1>
+            <h1>Tareas</h1>
         </header>
 
-        <main>
-            <section>
-                <h2>Tareas</h2>
-                <p>Tarea 1</p>
-                <p>Tarea 2</p>
-            </section>
-
+        <div class="alineado">
             <aside>
+
                 <h2>Filtros</h2>
-                <p>Alta prioridad</p>
-                <p>Baja prioridad</p>
+
+                <div>
+                    <p>Trabajo</p>
+                    <p>Personal</p>
+                    <p>Alta prioridad</p>
+                    <p>Baja prioridad</p>
+                </div>
+                    
             </aside>
 
-        </main>
+            <main>
+                <section>
+
+                    <h2>Lista de tareas</h2>
+
+                    <div class="tarea">
+                        <span>Tarea 1</span>
+                        <span>Trabajo</span>
+                        <span>Alta</span>
+                    </div>
+
+                    <div class="tarea">
+                        <span>Tarea 2</span>
+                        <span>Personal</span>
+                        <span>Baja</span>
+                    </div>
+
+                </section>
+            </main>
+        </div>
 
     </body>
 
