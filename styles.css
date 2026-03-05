@@ -1,10 +1,11 @@
 
         :root {
-           --color-fondo: #E3DFCF;
+           --color-fondo: #d8d0b2;
            --color-texto: #000000;
-           --color-titulo: #E3DFCF;
+           --color-titulo: #ffffff;
            --color-fondo-secundario: #c1c1c1;
            --color-fondo-titulo: #393939;
+           --color-fondo-animacion: #e7e7e7;
 
            --tamaño-letra-titulos: 2.2rem;
            --tamaño-letra-subtitulos: 1.4rem;
@@ -68,6 +69,7 @@
             align-items: center;
             padding: var(--espaciado-mediano);
             margin-bottom: var(--espaciado-pequeño);
+            margin-right: var(--espaciado-pequeño);
             background-color: var(--color-fondo-secundario);
             border-radius: var(--radio-borde2);
             transition: background-color 0.35s ease, transform 0.35s ease;
@@ -79,11 +81,22 @@
             gap: 2px;
         }
 
-        .tarea:hover {
-            background-color: #ececec;
-            transform: scale(1.02);
+        aside .busqueda {
+            width: 100%;
+            margin-bottom: var(--espaciado-mediano);
+            border-radius: var(--radio-borde);
+        }
+        aside .busqueda input {
+            width: 100%;
+            padding: var(--espaciado-pequeño);
+            border-radius: var(--radio-borde);
+            box-sizing: border-box;
         }
 
+        .tarea:hover {
+            background-color: var(--color-fondo-animacion);
+            transform: scale(1.0150);
+        }
         .tarea:first-child {
             margin-top: 10px;
         }
@@ -97,4 +110,27 @@
             .alineado {
                 flex-direction: row;
             }
+            .tarea {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--espaciado-pequeño)
+            }
+        }
+
+        #inputTarea {
+            padding: var(--espaciado-pequeño);
+            border-radius: var(--radio-borde);
+            box-sizing: border-box;
+        }
+
+        select {
+            padding: var(--espaciado-pequeño);
+            border-radius: var(--radio-borde);
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: var(--espaciado-pequeño);
+            border-radius: var(--radio-borde);
+            box-sizing: border-box;
         }
