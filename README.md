@@ -1,10 +1,14 @@
 
-TASKFLOW by Santiago-PM
+## TASKFLOW by Santiago-PM
 
-Este repositorio es de una Pequeña Pagina Web con la que puedes crear una Mini Lista de Tareas con unos Filtros predefinidos con la capacidad de Buscar y Filtrar con ellos.
-Desarrollado en HTML, CSS y JavaScript.
+### Mini gestor de tareas desarrollado como practica de desarrollo web.
 
-Funcionalidades
+Este repositorio es de una **Pequeña Pagina Web** con la que puedes crear una **Mini Lista de Tareas** con unos **Filtros** predefinidos con la capacidad de **Buscar y Filtrar** con ellos.
+Desarrollado en **HTML, CSS y JavaScript**.
+
+---
+
+### Funcionalidades
 
 - Añadir nuevas tareas
 - Asignar categoría (Trabajo / Personal)
