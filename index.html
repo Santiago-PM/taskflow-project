@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link rel="stylesheet" href="styles.css">
+       <title>Lista de Tareas</title>
+    </head>
+
+    <body>
+
+        <header>
+            <h1>Tareas</h1>
+        </header>
+
+        <div class="alineado">
+            <aside>
+
+                <h2>Filtros</h2>
+
+                <div class="busqueda">
+                    <input type="text" id="busquedaTarea" placeholder="Buscar tarea">
+                </div>
+
+                <div class="filtros">
+                    <label><input type="checkbox" value="Trabajo"> Trabajo</label>
+                    <label><input type="checkbox" value="Personal"> Personal</label>
+                    <label><input type="checkbox" value="Alta"> Alta prioridad</label>
+                    <label><input type="checkbox" value="Baja"> Baja prioridad</label>
+                </div>
+                    
+            </aside>
+
+            <main>
+                <section>
+                    
+                    <h2>Lista de tareas</h2>
+                    
+                        <form id="formularioTareas">
+                            <input type="text" id="inputTarea" placeholder="Nueva Tarea" required>
+
+                            <select id="categoria">
+                                <option value="Trabajo">Trabajo</option>
+                                <option value="Personal">Personal</option>
+                            </select>
+
+                            <select id="prioridad">
+                                <option value="Alta">Alta</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+
+                            <button type="submit">Añadir</button>
+                        </form>
+
+                        <div id="listaTareas"></div>
+
+                </section>
+            </main>
+       
+        <script src="app.js"></script>
+    </body>
+
+</html>
