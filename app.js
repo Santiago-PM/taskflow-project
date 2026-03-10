@@ -12,7 +12,7 @@ const listaTareas = document.getElementById("listaTareas");
 // Crear tarea
 function mostrarTarea(tarea) {
     const divTarea = document.createElement("div");
-    divTarea.className = "tarea flex flex-col md:flex-row md:items-center md:gap-16 gap-2 p-4 my-1 mr-1 bg-gray-300 hover:bg-white shadow-md rounded-xl hover:scale-[1.01] transition";
+    divTarea.className = "tarea flex flex-col md:flex-row md:items-center md:gap-16 gap-2 p-4 my-1 mr-1 bg-gray-300 hover:bg-white shadow-md rounded-xl hover:scale-[1.01] transition dark:bg-gray-800 dark:hover:bg-gray-500 dark:text-white";
     // crear spans internos
     const spanTexto = document.createElement("span");
     spanTexto.textContent = tarea.texto;
@@ -20,15 +20,15 @@ function mostrarTarea(tarea) {
 
     const spanCategoria = document.createElement("span");
     spanCategoria.textContent = tarea.categoria;
-    spanCategoria.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full"
+    spanCategoria.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full dark:bg-gray-300 dark:text-gray-950"
 
     const spanPrioridad = document.createElement("span");
     spanPrioridad.textContent = tarea.prioridad;
-    spanPrioridad.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full"
+    spanPrioridad.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full dark:bg-gray-300 dark:text-gray-950"
 
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
-    botonEliminar.className = "bg-red-700 text-white px-3 py-1 rounded-full hover:bg-red-500 transition-colors shadow-sm";
+    botonEliminar.className = "bg-red-700 text-white px-3 py-1 rounded-full hover:bg-red-500 transition-colors shadow-sm dark:bg-red-600 dark:hover:bg-red-700";
 
     botonEliminar.addEventListener("click", function() {
         divTarea.remove(); // eliminar del array y actualizar localStorage
@@ -118,3 +118,26 @@ function aplicarFiltros() {
 }
 checkboxes.forEach(cb => cb.addEventListener("change", aplicarFiltros));
 inputBusqueda.addEventListener("input", aplicarFiltros);
+
+// Al cargar la página
+if(localStorage.getItem("modoOscuro") === "true"){
+    document.body.classList.add("dark");
+    document.body.classList.remove("bg-amber-100");
+    document.body.classList.add("bg-gray-950");
+}
+
+// Toggle
+const toggleDark = document.getElementById("toggleDark");
+toggleDark.addEventListener("click", () => {
+    const esDark = document.body.classList.toggle("dark"); // true si ahora es dark
+
+    if (esDark) {
+        document.body.classList.remove("bg-amber-100");
+        document.body.classList.add("bg-gray-950");
+    } else {
+        document.body.classList.remove("bg-gray-950");
+        document.body.classList.add("bg-amber-100");
+    }
+
+    localStorage.setItem("modoOscuro", esDark);
+});
