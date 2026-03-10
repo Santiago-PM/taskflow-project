@@ -4,61 +4,66 @@
     <head>
        <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <link rel="stylesheet" href="styles.css">
+       <link rel="stylesheet" href="style.css">
        <title>Lista de Tareas</title>
     </head>
 
-    <body>
+    <body class="font-sans text-black bg-amber-100 text-base">
 
         <header>
-            <h1>Tareas</h1>
+            <h1 class="font-serif text-5xl bg-gray-800 text-white rounded-md p-5">Tareas</h1>
         </header>
 
-        <div class="alineado">
-            <aside>
+        <div class="alineado flex gap-4 p-2">
+            <aside class="w-[150px] bg-gray-300 rounded-md p-2">
 
-                <h2>Filtros</h2>
+                <h2 class="text-xl font-bold mb-2">Filtros</h2>
 
-                <div class="busqueda">
-                    <input type="text" id="busquedaTarea" placeholder="Buscar tarea">
+                <div class="busqueda mb-4 w-full rounded-md">
+                    <input type="text" id="busquedaTarea" placeholder="Buscar tarea" class="w-full p-2 shadow-md rounded-md box-border">
                 </div>
 
-                <div class="filtros">
+                <div class="filtros w-[200px] rounded-md mt-2 flex flex-col gap-2">
+                    <p class="text-xl font-bold my-2">Categoria</p>
                     <label><input type="checkbox" value="Trabajo"> Trabajo</label>
                     <label><input type="checkbox" value="Personal"> Personal</label>
+                    <p class="text-xl font-bold my-2">Prioridad</p>
                     <label><input type="checkbox" value="Alta"> Alta prioridad</label>
                     <label><input type="checkbox" value="Baja"> Baja prioridad</label>
                 </div>
                     
             </aside>
+        
 
-            <main>
+            <main class="flex-1">
                 <section>
-                    
-                    <h2>Lista de tareas</h2>
+                
+                    <h2 class="text-xl font-bold mt-2 mb-2">Lista de tareas</h2>
                     
                         <form id="formularioTareas">
-                            <input type="text" id="inputTarea" placeholder="Nueva Tarea" required>
+                            <input type="text" id="inputTarea" placeholder="Nueva Tarea" required class="p-2 rounded-md box-border flex-auto mb-2 md:mb-0">
 
-                            <select id="categoria">
+                            <select id="categoria" class="p-2 rounded-md box-border mt-1 bg-gray-300">
                                 <option value="Trabajo">Trabajo</option>
                                 <option value="Personal">Personal</option>
                             </select>
 
-                            <select id="prioridad">
+                            <select id="prioridad" class="p-2 rounded-md box-border mt-1 bg-gray-300">
                                 <option value="Alta">Alta</option>
                                 <option value="Baja">Baja</option>
                             </select>
 
-                            <button type="submit">Añadir</button>
+                            <button type="submit" class="p-2 my-1 bg-gray-300 rounded-md box-border">Añadir</button>
                         </form>
 
-                        <div id="listaTareas"></div>
-
+                        <div id="listaTareas" class = "flex flex-col gap-2 my-1 mr-1"></div>
                 </section>
             </main>
        
-        <script src="app.js"></script>
+            <script src="app.js"></script>
+
+        </div>
+
     </body>
 
 </html>

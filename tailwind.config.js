@@ -1,13 +1,9 @@
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // activa modo oscuro con clase 'dark'
-  content: [
-    "./taskflow-proyect/*.html",       // todos tus HTML
-    "./taskflow-proyect/*.js"    // tus JS
-  ],
+  content: ["*.html", "*.js"],
   theme: {
-    extend: {},       // aquí puedes añadir colores/fuentes si quieres
+    extend: {},
   },
   plugins: [],
 }
+

@@ -12,20 +12,23 @@ const listaTareas = document.getElementById("listaTareas");
 // Crear tarea
 function mostrarTarea(tarea) {
     const divTarea = document.createElement("div");
-    divTarea.classList.add("tarea");
-
+    divTarea.className = "tarea flex flex-col md:flex-row md:items-center md:gap-16 gap-2 p-4 my-1 mr-1 bg-gray-300 hover:bg-white shadow-md rounded-xl hover:scale-[1.01] transition";
     // crear spans internos
     const spanTexto = document.createElement("span");
     spanTexto.textContent = tarea.texto;
+    spanTexto.className = "flex-1";
 
     const spanCategoria = document.createElement("span");
     spanCategoria.textContent = tarea.categoria;
+    spanCategoria.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full"
 
     const spanPrioridad = document.createElement("span");
     spanPrioridad.textContent = tarea.prioridad;
+    spanPrioridad.className = "font-bold bg-gray-500 text-white px-2 py-1 rounded-full"
 
     const botonEliminar = document.createElement("button");
     botonEliminar.textContent = "Eliminar";
+    botonEliminar.className = "bg-red-700 text-white px-3 py-1 rounded-full hover:bg-red-500 transition-colors shadow-sm";
 
     botonEliminar.addEventListener("click", function() {
         divTarea.remove(); // eliminar del array y actualizar localStorage
@@ -68,6 +71,7 @@ formulario.addEventListener("submit", function(event) {
     tareas.push(tarea);
     localStorage.setItem("tareas", JSON.stringify(tareas));
     mostrarTarea(tarea);
+    aplicarFiltros();
 
     input.value = ""; // limpia el input para la siguiente tarea
 
