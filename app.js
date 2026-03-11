@@ -16,7 +16,14 @@ function mostrarTarea(tarea) {
     // crear spans internos
     const spanTexto = document.createElement("span");
     spanTexto.textContent = tarea.texto;
-    spanTexto.className = "flex-1";
+    spanTexto.className = "flex-1 max-w-full";
+    
+    // si el texto es muy largo, rompe letra por letra
+    if (tarea.texto.length > 100) {
+        spanTexto.classList.add("break-all");
+    } else {
+        spanTexto.classList.add("break-words");
+    }
 
     const spanCategoria = document.createElement("span");
     spanCategoria.textContent = tarea.categoria;

@@ -11,20 +11,20 @@
     <body class="bg-amber-100 dark:bg-gray-950">
 
         <header class="flex items-center justify-between p-5 bg-gray-800 rounded-md dark:bg-black">
-            <h1 class="font-serif text-5xl text-white">Tareas</h1>
+            <h1 class="font-serif text-5xl text-white dark:text-amber-100">Tareas</h1>
             <button id="toggleDark" class="text-base px-3 py-1 rounded bg-gray-950 text-white hover:bg-gray-500 transition-colors dark:bg-gray-800 dark:hover:bg-gray-500 dark:text-white">Modo Oscuro</button>
         </header>
 
         <div class="alineado flex gap-4 p-2">
-            <aside class="w-[150px] bg-gray-300 rounded-md p-2 dark:bg-gray-800 dark:text-white">
+            <aside class="max-w-[150px] bg-gray-300 rounded-md p-2 dark:bg-gray-800 dark:text-white">
 
                 <h2 class="text-xl font-bold mb-2">Filtros</h2>
 
                 <div class="busqueda mb-4 w-full rounded-md">
-                    <input type="text" id="busquedaTarea" placeholder="Buscar tarea" class="w-full p-2 shadow-md rounded-md box-border hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
+                    <input type="text" id="busquedaTarea" placeholder="Buscar tarea" maxlength="50" class="w-full p-2 shadow-md rounded-md box-border hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
                 </div>
 
-                <div class="filtros w-[200px] rounded-md mt-2 flex flex-col gap-2">
+                <div class="filtros rounded-md mt-2 flex flex-col gap-2">
                     <p class="text-xl font-bold my-2">Categoria</p>
                     <label><input type="checkbox" value="Trabajo"> Trabajo</label>
                     <label><input type="checkbox" value="Personal"> Personal</label>
@@ -42,7 +42,7 @@
                     <h2 class="text-xl font-bold mt-2 mb-2 dark:text-white">Lista de tareas</h2>
                     
                         <form id="formularioTareas">
-                            <input type="text" id="inputTarea" placeholder="Nueva Tarea" required class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
+                            <input type="text" id="inputTarea" placeholder="Nueva Tarea" maxlength="" required class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
 
                             <select id="categoria" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">
                                 <option value="Trabajo">Trabajo</option>
@@ -54,7 +54,7 @@
                                 <option value="Baja">Baja</option>
                             </select>
 
-                            <button type="submit" class="p-2 my-1 bg-gray-300 rounded-md box-border hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">Añadir</button>
+                            <button type="submit" class="p-2 my-1 mr-1 bg-gray-300 rounded-md box-border hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">Añadir</button>
                         </form>
 
                         <div id="listaTareas" class = "flex flex-col gap-2 my-1 mr-1"></div>
