@@ -1,0 +1,34 @@
+# Ignore EVERYTHING by default (allowlist repo)
+/*
+
+# Allowlist (what SHOULD be versioned)
+!/.gitignore
+!/README.md
+!/package.json
+!/package-lock.json
+!/app.js
+!/index.html
+!/style.css
+!/tailwind.config.js
+!/postcss.config.js
+
+!/docs/
+!/docs/ai/
+!/docs/ai/**
+
+# Still ignore common junk even if someone unignores broadly later
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Explicitly ignore these build artifacts if they exist
+/node_modules/
+/.vscode/
+/custom.css
+/input.css
+/dist/
+/build/
+/coverage/
