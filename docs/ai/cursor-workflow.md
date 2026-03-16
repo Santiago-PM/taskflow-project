@@ -1,4 +1,4 @@
-## CURSOR
+# CURSOR
 
 **Cursor** es un **editor de texto** prácticamente idéntico a Visual Studio Code; tanto el explorador de archivos, la interfaz y las herramientas son iguales, pero cuenta con un **asistente con Inteligencia Artificial**.
 
@@ -6,7 +6,9 @@ Su interfaz, si ya has utilizado Visual Studio Code, es la misma: simple y clara
 
 Lo importante, lo que cabe destacar en diferencia con Visual Studio Code, son sus funciones con el asistente con IA.
 
-### EXPERIENCIA Y FUNCIONES
+---
+
+## EXPERIENCIA Y FUNCIONES
 
 Para empezar, podemos hablar del autocompletado, una maravilla para ser rápido o para cuando no recuerdas alguna palabra o parte de la sintaxis.
 
@@ -16,7 +18,9 @@ Con el atajo de teclado CTRL + L o en el icono, podemos abrir el chat con el asi
 
 Con el otro atajo de teclado CTRL + K podemos pedirle generar o editar código inline.
 
-### COMPOSER
+---
+
+## COMPOSER
 
 Pero lo mejor y más impresionante es el Composer.
 Tiene la capacidad de generar cambios de código en varios archivos a la vez; por ejemplo, puedes pedirle que mejore el funcionamiento o la lectura de tu JavaScript.
@@ -83,6 +87,6 @@ Cuando filtro, ya no miro spans: leo esos dataset (no depende del HTML interno):
 
 ---
 
-### CONCLUSIÓN
+## CONCLUSIÓN
 
 Es un gran editor de texto, y su añadido de asistente con IA, el cual es fácil de usar y muy eficiente, lo hace muy recomendable para facilitar la velocidad de programación y el cuidado del código.
