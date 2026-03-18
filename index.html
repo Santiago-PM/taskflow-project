@@ -5,32 +5,49 @@
        <meta charset="UTF-8">
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
        <link rel="stylesheet" href="style.css">
+       <link href="https://fonts.googleapis.com/css2?family=Mulish&display=swap" rel="stylesheet">
        <title>Lista de Tareas</title>
     </head>
     
-    <body class="bg-amber-100 dark:bg-gray-950"> 
+    <body class="font-[Mulish] bg-amber-100 dark:bg-gray-800 transition-colors"> 
 
-        <header class="flex items-center justify-between p-5 bg-gray-800 rounded-md dark:bg-black">
-            <h1 class="font-serif text-5xl text-white dark:text-amber-100">Tareas</h1>
-            <button id="toggleDark" type="button" class="text-base px-3 py-1 rounded bg-gray-950 text-white hover:bg-gray-500 transition-colors dark:bg-gray-800 dark:hover:bg-gray-500 dark:text-white" aria-pressed="false">Modo Oscuro</button>
+        <header class="flex items-center justify-between p-5 bg-gray-800 rounded-md dark:bg-gray-950">
+            <h1 class="font-serif text-5xl text-white">Tareas</h1>
+            <button id="toggleDark" type="button" class="text-base px-3 py-1 rounded bg-gray-900 text-white hover:bg-gray-500 hover:scale-[1.07] transition transition-colors dark:bg-gray-800 dark:hover:bg-gray-500 dark:text-white" aria-pressed="false">Modo Oscuro</button>
         </header>
 
-        <div class="alineado flex gap-4 p-2">
-            <aside class="max-w-[150px] bg-gray-300 rounded-md p-2 dark:bg-gray-800 dark:text-white">
+        <div class=" alineado flex flex-col md:flex-row gap-4 p-2">
+            <aside class="w-full md:w-[150px] bg-gray-300 rounded-md p-2 dark:bg-gray-700 dark:text-white">
 
                 <h2 class="text-xl font-bold mb-2">Filtros</h2>
 
                 <div class="busqueda mb-4 w-full rounded-md">
-                    <input type="text" id="busquedaTarea" name="busquedaTarea" placeholder="Buscar tarea" maxlength="50" autocomplete="off" inputmode="search" aria-label="Buscar tarea" class="w-full p-2 shadow-md rounded-md box-border hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
+                    <input type="text" id="busquedaTarea" name="busquedaTarea" placeholder="Buscar tarea" maxlength="50" autocomplete="off" inputmode="search" aria-label="Buscar Tarea" class="w-full p-2 shadow-md rounded-md box-border hover:scale-[1.03] transition focus:hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-white">
                 </div>
 
-                <div class="filtros rounded-md mt-2 flex flex-col gap-2">
-                    <p class="text-xl font-bold my-2">Categoria</p>
-                    <label><input type="checkbox" value="Trabajo"> Trabajo</label>
-                    <label><input type="checkbox" value="Personal"> Personal</label>
-                    <p class="text-xl font-bold my-2">Prioridad</p>
-                    <label><input type="checkbox" value="Alta"> Alta prioridad</label>
-                    <label><input type="checkbox" value="Baja"> Baja prioridad</label>
+                <div class="filtros rounded-md mt-2 w-full flex flex-col gap-2">
+                    <div>
+                        <p class="text-xl font-bold my-2">Categoria</p>
+                        <div class="flex flex-row flex-wrap gap-2">
+                            <label><input type="checkbox" value="Trabajo"> Trabajo</label>
+                            <label><input type="checkbox" value="Personal"> Personal</label>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold my-2">Prioridad</p>
+                        <div class="flex flex-row flex-wrap gap-2"> 
+                            <label><input type="checkbox" value="Alta"> Alta prioridad</label>
+                            <label><input type="checkbox" value="Baja"> Baja prioridad</label>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold my-2">Estado</p>
+                        <div class="flex flex-row flex-wrap gap-2">    
+                            <label><input type="checkbox" value="Completado"> Completada</label>
+                            <label><input type="checkbox" value="NoCompletado"> No completada</label>
+                        </div>
+                    </div>
+
                 </div>
                     
             </aside>
@@ -42,19 +59,19 @@
                     <h2 class="text-xl font-bold mt-2 mb-2 dark:text-white">Lista de tareas</h2>
                     
                         <form id="formularioTareas">
-                            <input type="text" id="inputTarea" name="inputTarea" placeholder="Nueva Tarea" maxlength="150" required autocomplete="off" aria-label="Nueva tarea" class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-500 dark:text-gray-950">
+                            <input type="text" id="inputTarea" name="inputTarea" placeholder="Nueva Tarea" maxlength="150" required autocomplete="off" aria-label="Nueva tarea" class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:hover:bg-gray-400 focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-600 dark:text-white">
 
-                            <select id="categoria" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">
+                            <select id="categoria" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">
                                 <option value="Trabajo">Trabajo</option>
                                 <option value="Personal">Personal</option>
                             </select>
 
-                            <select id="prioridad" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">
+                            <select id="prioridad" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">
                                 <option value="Alta">Alta</option>
                                 <option value="Baja">Baja</option>
                             </select>
 
-                            <button type="submit" class="p-2 my-1 mr-1 bg-gray-300 rounded-md box-border hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-800 dark:text-white">Añadir</button>
+                            <button type="submit" class="p-2 my-1 mr-1 bg-gray-300 rounded-md box-border hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">Añadir</button>
                         </form>
 
                         <div id="listaTareas" class = "flex flex-col gap-2 my-1 mr-1"></div>
