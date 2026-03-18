@@ -137,11 +137,11 @@
 
     const spanCategoria = document.createElement("span");
     spanCategoria.textContent = tarea.categoria;
-    spanCategoria.className ="font-bold flex justify-center bg-gray-500 text-white px-2 py-1 rounded-full ring-2 ring-gray-800 dark:ring-gray-950 dark:bg-gray-300 dark:text-gray-950";
+    spanCategoria.className ="font-bold flex items-center justify-center bg-gray-500 text-white px-2 py-1 rounded-full ring-2 ring-gray-800 dark:ring-gray-950 dark:bg-gray-300 dark:text-gray-950";
 
     const spanPrioridad = document.createElement("span");
     spanPrioridad.textContent = tarea.prioridad;
-    spanPrioridad.className ="font-bold flex justify-center bg-gray-500 text-white px-2 py-1 rounded-full ring-2 ring-gray-800 dark:ring-gray-950 dark:bg-gray-300 dark:text-gray-950";
+    spanPrioridad.className ="font-bold flex items-center justify-center bg-gray-500 text-white px-2 py-1 rounded-full ring-2 ring-gray-800 dark:ring-gray-950 dark:bg-gray-300 dark:text-gray-950";
 
       
     const botonEliminar = document.createElement("button");
