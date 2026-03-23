@@ -268,22 +268,25 @@
   }
 
   /**
-   * Crea botón editar con lógica de edición inline
-   * @param {Tarea} tarea
-   * @param {HTMLElement} contenedor
-   * @param {HTMLElement} spanTexto
-   * @param {HTMLElement} divTarea
-   * @returns {HTMLButtonElement}
-   */
-  function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
+ * Crea botón editar con lógica de edición inline
+ * @param {Tarea} tarea
+ * @param {HTMLElement} contenedor
+ * @param {HTMLElement} spanTexto
+ * @param {HTMLElement} divTarea
+ * @returns {HTMLButtonElement}
+ */
+function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
   const boton = crearBoton("Editar", "blue");
 
   boton.addEventListener("click", () => {
+    // --- OCULTAR BOTÓN EDITAR ---
+    boton.style.display = "none";
+
     // --- INPUT TEXTO ---
     const inputEdit = document.createElement("input");
     inputEdit.type = "text";
     inputEdit.value = tarea.texto;
-    inputEdit.className = "flex-1 px-2 py-1 rounded border border-gray-400";
+    inputEdit.className = "flex-1 px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white";
 
     // --- SELECT CATEGORIA ---
     const selectCat = document.createElement("select");
@@ -294,6 +297,7 @@
       if (op === tarea.categoria) option.selected = true;
       selectCat.appendChild(option);
     });
+    selectCat.className = "px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
     // --- SELECT PRIORIDAD ---
     const selectPri = document.createElement("select");
@@ -304,36 +308,40 @@
       if (op === tarea.prioridad) option.selected = true;
       selectPri.appendChild(option);
     });
+    selectPri.className = "px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
-    // --- BOTON GUARDAR ---
+    // --- BOTÓN GUARDAR ---
     const botonGuardar = crearBoton("Guardar", "green");
 
-    // Reemplazar contenido
+    // --- REEMPLAZOS ---
     contenedor.replaceChild(inputEdit, spanTexto);
     divTarea.replaceChild(selectCat, divTarea.children[1]);
     divTarea.replaceChild(selectPri, divTarea.children[2]);
-
     divTarea.appendChild(botonGuardar);
 
-    // --- GUARDAR CAMBIOS ---
+    // --- FUNCION GUARDAR ---
     const guardarCambios = () => {
       const nuevoTexto = inputEdit.value.trim();
       const nuevaCategoria = selectCat.value;
       const nuevaPrioridad = selectPri.value;
 
-      const validacion = validarTarea(nuevoTexto, nuevaCategoria, nuevaPrioridad);
-      if (!validacion.ok) return alert(validacion.msg);
+      // Validar, pero ignorando si es el mismo texto que ya tenía la tarea
+      if (!nuevoTexto) return alert("El texto no puede estar vacío");
+      if (nuevoTexto.length > 50) return alert("El texto no puede superar 50 caracteres");
+      if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(nuevoTexto)) return alert("Texto contiene caracteres no permitidos");
+      if (tareas.some(t => t.id !== tarea.id && t.texto.toLowerCase() === nuevoTexto.toLowerCase()))
+        return alert("Ya existe una tarea con ese texto");
 
       tarea.texto = nuevoTexto;
       tarea.categoria = nuevaCategoria;
       tarea.prioridad = nuevaPrioridad;
 
+      // Restaurar spans y diseño original
       spanTexto.textContent = nuevoTexto;
-
-      // Restaurar UI
       contenedor.replaceChild(spanTexto, inputEdit);
-      divTarea.children[1].textContent = nuevaCategoria;
-      divTarea.children[2].textContent = nuevaPrioridad;
+
+      divTarea.replaceChild(crearEtiqueta(nuevaCategoria), selectCat);
+      divTarea.replaceChild(crearEtiqueta(nuevaPrioridad), selectPri);
 
       divTarea.removeChild(botonGuardar);
 
@@ -344,20 +352,24 @@
 
       guardarTareas();
       aplicarFiltros();
+
+      // VOLVER A MOSTRAR BOTÓN EDITAR
+      boton.style.display = "inline-block";
     };
 
     botonGuardar.addEventListener("click", guardarCambios);
 
-    // Enter = guardar
-    inputEdit.addEventListener("keydown", e => {
-      if (e.key === "Enter") guardarCambios();
-    });
+    // --- ENTER = GUARDAR ---
+    inputEdit.addEventListener("keydown", e => { if (e.key === "Enter") guardarCambios(); });
 
-    // Escape = cancelar
+    // --- ESCAPE = CANCELAR ---
     inputEdit.addEventListener("keydown", e => {
       if (e.key === "Escape") {
         contenedor.replaceChild(spanTexto, inputEdit);
-        renderLista();
+        divTarea.replaceChild(crearEtiqueta(tarea.categoria), selectCat);
+        divTarea.replaceChild(crearEtiqueta(tarea.prioridad), selectPri);
+        divTarea.removeChild(botonGuardar);
+        boton.style.display = "inline-block";
       }
     });
 
@@ -400,7 +412,7 @@
       if (!cb.checked) return;
 
       if (["Trabajo", "Personal"].includes(cb.value)) filtrosCategoria.push(cb.value);
-      if (["Alta", "Media", "Baja"].includes(cb.value)) filtrosPrioridad.push(cb.value);
+      if (["Alta", "Baja"].includes(cb.value)) filtrosPrioridad.push(cb.value);
       if (["Completado", "NoCompletado"].includes(cb.value)) filtrosCompletada.push(cb.value);
     });
 
@@ -449,7 +461,7 @@
     if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(texto)) return { ok: false, msg: "Texto contiene caracteres no permitidos" };
     if (tareas.some(t => t.texto.toLowerCase() === texto.toLowerCase())) return { ok: false, msg: "Ya existe una tarea con ese texto" };
     if (!["Trabajo","Personal"].includes(categoria)) return { ok: false, msg: "Categoría inválida" };
-    if (!["Alta","Media","Baja"].includes(prioridad)) return { ok: false, msg: "Prioridad inválida" };
+    if (!["Alta","Baja"].includes(prioridad)) return { ok: false, msg: "Prioridad inválida" };
     return { ok: true };
   }
 })();
