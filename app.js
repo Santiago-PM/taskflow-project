@@ -150,6 +150,17 @@
       return listaTareas.appendChild(crearNodoInfo("No hay tareas todavía."));
     }
 
+    // Colores de los botones (al cargar la página)
+document.querySelectorAll("#listaTareas button").forEach(btn => {
+  if (btn.textContent === "Editar") {
+    btn.className = "bg-blue-700 text-white px-3 py-1 rounded-full hover:bg-blue-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-blue-600 dark:hover:bg-blue-700";
+  } else if (btn.textContent === "Eliminar") {
+    btn.className = "bg-red-700 text-white px-3 py-1 rounded-full hover:bg-red-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-red-600 dark:hover:bg-red-700";
+  } else if (btn.textContent === "Guardar") {
+    btn.className = "bg-green-700 text-white px-3 py-1 rounded-full hover:bg-green-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-green-600 dark:hover:bg-green-700";
+  }
+});
+
     tareas.forEach(t => listaTareas.appendChild(crearNodoTarea(t)));
   }
 
@@ -297,7 +308,7 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
       if (op === tarea.categoria) option.selected = true;
       selectCat.appendChild(option);
     });
-    selectCat.className = "px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
+    selectCat.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
     // --- SELECT PRIORIDAD ---
     const selectPri = document.createElement("select");
@@ -308,7 +319,7 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
       if (op === tarea.prioridad) option.selected = true;
       selectPri.appendChild(option);
     });
-    selectPri.className = "px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
+    selectPri.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
     // --- BOTÓN GUARDAR ---
     const botonGuardar = crearBoton("Guardar", "green");
