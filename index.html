@@ -27,7 +27,7 @@
 
                 <div class="filtros rounded-md mt-2 w-full flex flex-col gap-2">
                     <div>
-                        <p class="text-xl font-bold my-2">Categoria</p>
+                        <p class="text-xl font-bold my-2">Categoría</p>
                         <div class="flex flex-row flex-wrap gap-2">
                             <label><input type="checkbox" value="Trabajo"> Trabajo</label>
                             <label><input type="checkbox" value="Personal"> Personal</label>
@@ -59,13 +59,15 @@
                     <h2 class="text-xl font-bold mt-2 mb-2 dark:text-white">Lista de tareas</h2>
                     
                         <form id="formularioTareas">
-                            <input type="text" id="inputTarea" name="inputTarea" placeholder="Nueva Tarea" maxlength="150" required autocomplete="off" aria-label="Nueva tarea" class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:hover:bg-gray-400 focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-600 dark:text-white">
+                            <input type="text" id="inputTarea" name="inputTarea" placeholder="Nueva Tarea" maxlength="100" required autocomplete="off" aria-label="Nueva tarea" class="p-2 rounded-md box-border shadow-sm flex-auto mb-2 md:mb-0 hover:scale-[1.03] transition focus:outline-none focus:hover:bg-gray-400 focus:ring-2 focus:ring-gray-800 dark:focus:ring-2 dark:focus:ring-white dark:bg-gray-600 dark:text-white">
 
+                            <label for="categoria" class="sr-only">Categoría</label>
                             <select id="categoria" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">
                                 <option value="Trabajo">Trabajo</option>
                                 <option value="Personal">Personal</option>
                             </select>
 
+                            <label for="prioridad" class="sr-only">Prioridad</label>
                             <select id="prioridad" class="p-2 rounded-md box-border mt-1 bg-gray-300 hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">
                                 <option value="Alta">Alta</option>
                                 <option value="Baja">Baja</option>

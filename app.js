@@ -194,7 +194,7 @@ document.querySelectorAll("#listaTareas button").forEach(btn => {
     const spanPrioridad = crearEtiqueta(tarea.prioridad);
     const checkbox = crearCheckbox(tarea, div, spanTexto);
 
-    const contenedor = crearElemento("div", ["flex", "items-center", "gap-2", "flex-1"], [checkbox, spanTexto]);
+    const contenedor = crearElemento("div", ["flex", "items-center", "gap-2", "flex-1","mr-2"], [checkbox, spanTexto]);
 
     const botonEditar = crearBotonEditar(tarea, contenedor, spanTexto, div);
     const botonEliminar = crearBotonEliminar(tarea.id);
@@ -338,7 +338,7 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
 
       // Validar, pero ignorando si es el mismo texto que ya tenía la tarea
       if (!nuevoTexto) return alert("El texto no puede estar vacío");
-      if (nuevoTexto.length > 50) return alert("El texto no puede superar 50 caracteres");
+      if (nuevoTexto.length > 100) return alert("El texto no puede superar 100 caracteres");
       if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(nuevoTexto)) return alert("Texto contiene caracteres no permitidos");
       if (tareas.some(t => t.id !== tarea.id && t.texto.toLowerCase() === nuevoTexto.toLowerCase()))
         return alert("Ya existe una tarea con ese texto");
@@ -468,7 +468,7 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
    */
   function validarTarea(texto, categoria, prioridad) {
     if (!texto) return { ok: false, msg: "El texto no puede estar vacío" };
-    if (texto.length > 50) return { ok: false, msg: "El texto no puede superar 50 caracteres" };
+    if (texto.length > 100) return { ok: false, msg: "El texto no puede superar 100 caracteres" };
     if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(texto)) return { ok: false, msg: "Texto contiene caracteres no permitidos" };
     if (tareas.some(t => t.texto.toLowerCase() === texto.toLowerCase())) return { ok: false, msg: "Ya existe una tarea con ese texto" };
     if (!["Trabajo","Personal"].includes(categoria)) return { ok: false, msg: "Categoría inválida" };
