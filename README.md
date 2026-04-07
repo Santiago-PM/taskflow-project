@@ -1,7 +1,6 @@
+# TASKFLOW by Santiago-PM
 
-## TASKFLOW by Santiago-PM
-
-### Mini gestor de tareas desarrollado como practica de desarrollo web.
+## Mini gestor de tareas desarrollado como practica de desarrollo web.
 
 Este repositorio es de un **Proyecto de Practicas** donde subo mis archivos y documentos.
 
@@ -31,39 +30,43 @@ Web de Tareas
 - No es posible crear tarea sin texto
 - Si se crea una tarea con mucho texto se dividen las palabras. En caso de ser una palabra muy larga también la divide
 
---- 
-
-Documentación sobre uso y pruebas con IA.
-
 ---
 
-### Mini task manager developed as web development practice.
+## Documentación sobre uso y pruebas con IA.
 
-This repository is for a **Practice Project** where I upload my files and documents.
+### Model context Protocol (MCP)
 
----
+### Proceso de Instalación
 
-Task Web App
+## Configuración de MCP en Cursor
 
-[URL: Taskflow - Project](https://taskflow-project-santiago.vercel.app/)
+Para configurar MCP en Cursor, se creó el archivo `.cursor/mcp.json` en la raíz del proyecto.
 
-### Features
+Se añadió el siguiente contenido:
 
-- Add tasks  
-- Assign category (Work / Personal)  
-- Assign priority (High / Low)  
-- Mark tasks as completed
-- Delete tasks  
-- Filter tasks by category  
-- Filter tasks by priority  
-- Filter tasks by completion status
-- Search tasks by text  
-- Save tasks in the browser using LocalStorage  
-- Mobile-adapted interface (responsive)
-- Dark Mode
-- It is not possible to create a task without text
-- If a task with a lot of text is created, the words are wrapped. Very long words are also broken down
+```
+```json
+{
+"mcpServers": {
+    "filesystem": {  <-- Nombre del servidor
+    "command": "npx",  <-- Cómo se ejecutara
+    "args": ["-y", "@modelcontextprotocol/server-filesystem", "."]  <-- Paquete MCP que instalas y carpeta del proyecto
+    }
+}
+}
+```
 
----
+El servidor se ejecuta automáticamente mediante npx, pero también se puede lanzar manualmente con:
 
-Documentation on usage and testing with AI.
+```
+npx -y @modelcontextprotocol/server-filesystem .
+```
+
+Después de esto reiniciamos Cursor para asegurarnos que la configuracion del MCP se carga correctamente.
+Se comprobó que el servidor MCP funcionaba correctamente realizando consultas como:
+
+- Listar archivos del proyecto
+- Leer contenido de archivos
+- Analizar código
+
+El modelo respondió utilizando datos reales del proyecto, confirmando que MCP estaba activo.

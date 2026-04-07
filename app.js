@@ -1,4 +1,5 @@
 (() => {
+  // Claves de persistencia en localStorage
   const STORAGE_TASKS_KEY = "tareas";
   const STORAGE_DARKMODE_KEY = "darkMode";
 
@@ -12,33 +13,44 @@
    * @property {number} createdAt
    */
 
+  /** Estado en memoria de todas las tareas */
   /** @type {Tarea[]} */
   let tareas = cargarTareas();
 
+  // Referencias a elementos del DOM
   const formulario = document.getElementById("formularioTareas");
   const inputTarea = document.getElementById("inputTarea");
   const selectCategoria = document.getElementById("categoria");
   const selectPrioridad = document.getElementById("prioridad");
   const listaTareas = document.getElementById("listaTareas");
   const botonModoOscuro = document.getElementById("botonModoOscuro");
+  const errorFormulario = document.getElementById("errorFormulario");
 
+  // Filtros de la UI
   const checkboxes = document.querySelectorAll(".filtros input[type='checkbox']");
   const inputBusqueda = document.getElementById("busquedaTarea");
 
+  // Render inicial
   renderLista();
   aplicarFiltros();
   sincronizarModoOscuroUI();
 
-  // --- Añadir tarea ---
+  /**
+   * Maneja el alta de una nueva tarea desde el formulario principal
+   */
   formulario.addEventListener("submit", (e) => {
     e.preventDefault();
+    limpiarError();
 
     const texto = inputTarea.value.trim();
     const categoria = selectCategoria.value;
     const prioridad = selectPrioridad.value;
 
     const validacion = validarTarea(texto, categoria, prioridad);
-    if (!validacion.ok) return alert(validacion.msg);
+    if (!validacion.ok) {
+      mostrarError(validacion.msg);
+      return;
+    }
 
     /** @type {Tarea} */
     const tarea = {
@@ -55,9 +67,12 @@
     renderLista();
     aplicarFiltros();
     inputTarea.value = "";
+    inputTarea.focus();
   });
 
-  // --- Eliminar tarea ---
+  /**
+   * Maneja la eliminación de tareas mediante delegación de eventos
+   */
   listaTareas.addEventListener("click", (e) => {
     const boton = e.target.closest("button[data-action='delete']");
     if (!boton) return;
@@ -70,11 +85,15 @@
     aplicarFiltros();
   });
 
-  // --- Filtros ---
+  /**
+   * Recalcula visibilidad de tareas cuando cambian filtros/entrada de búsqueda
+   */
   checkboxes.forEach(cb => cb.addEventListener("change", aplicarFiltros));
   inputBusqueda.addEventListener("input", aplicarFiltros);
 
-  // --- Modo oscuro ---
+  /**
+   * Alterna el modo oscuro y persiste la preferencia del usuario
+   */
   botonModoOscuro.addEventListener("click", () => {
     const esDark = document.body.classList.toggle("dark");
     aplicarModoOscuro(esDark);
@@ -121,9 +140,16 @@
 
   /**
    * Guarda tareas en localStorage
+   * @returns {boolean} true si se guardó correctamente; false si ocurrió un error
    */
   function guardarTareas() {
-    localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tareas));
+    try {
+      localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tareas));
+      return true;
+    } catch {
+      mostrarError("No se pudieron guardar los cambios. Revisa el almacenamiento del navegador.");
+      return false;
+    }
   }
 
   /**
@@ -149,17 +175,6 @@
     if (!tareas.length) {
       return listaTareas.appendChild(crearNodoInfo("No hay tareas todavía."));
     }
-
-    // Colores de los botones (al cargar la página)
-document.querySelectorAll("#listaTareas button").forEach(btn => {
-  if (btn.textContent === "Editar") {
-    btn.className = "bg-blue-700 text-white px-3 py-1 rounded-full hover:bg-blue-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-blue-600 dark:hover:bg-blue-700";
-  } else if (btn.textContent === "Eliminar") {
-    btn.className = "bg-red-700 text-white px-3 py-1 rounded-full hover:bg-red-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-red-600 dark:hover:bg-red-700";
-  } else if (btn.textContent === "Guardar") {
-    btn.className = "bg-green-700 text-white px-3 py-1 rounded-full hover:bg-green-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-green-600 dark:hover:bg-green-700";
-  }
-});
 
     tareas.forEach(t => listaTareas.appendChild(crearNodoTarea(t)));
   }
@@ -279,116 +294,114 @@ document.querySelectorAll("#listaTareas button").forEach(btn => {
   }
 
   /**
- * Crea botón editar con lógica de edición inline
- * @param {Tarea} tarea
- * @param {HTMLElement} contenedor
- * @param {HTMLElement} spanTexto
- * @param {HTMLElement} divTarea
- * @returns {HTMLButtonElement}
- */
-function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
-  const boton = crearBoton("Editar", "blue");
+   * Crea el botón "Editar" y define el flujo de edición inline de la tarea
+   * @param {Tarea} tarea
+   * @param {HTMLElement} contenedor
+   * @param {HTMLElement} spanTexto
+   * @param {HTMLElement} divTarea
+   * @returns {HTMLButtonElement}
+   */
+  function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
+    const boton = crearBoton("Editar", "blue");
 
-  boton.addEventListener("click", () => {
-    // --- OCULTAR BOTÓN EDITAR ---
-    boton.style.display = "none";
+    boton.addEventListener("click", () => {
+      // Campo para editar el texto de la tarea
+      const inputEdit = document.createElement("input");
+      inputEdit.type = "text";
+      inputEdit.value = tarea.texto;
+      inputEdit.className = "flex-1 px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white";
 
-    // --- INPUT TEXTO ---
-    const inputEdit = document.createElement("input");
-    inputEdit.type = "text";
-    inputEdit.value = tarea.texto;
-    inputEdit.className = "flex-1 px-2 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white";
+      // Selector para editar la categoría
+      const selectCat = document.createElement("select");
+      ["Trabajo", "Personal"].forEach(op => {
+        const option = document.createElement("option");
+        option.value = op;
+        option.textContent = op;
+        if (op === tarea.categoria) option.selected = true;
+        selectCat.appendChild(option);
+      });
+      selectCat.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
-    // --- SELECT CATEGORIA ---
-    const selectCat = document.createElement("select");
-    ["Trabajo", "Personal"].forEach(op => {
-      const option = document.createElement("option");
-      option.value = op;
-      option.textContent = op;
-      if (op === tarea.categoria) option.selected = true;
-      selectCat.appendChild(option);
-    });
-    selectCat.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
+      // Selector para editar la prioridad
+      const selectPri = document.createElement("select");
+      ["Alta", "Baja"].forEach(op => {
+        const option = document.createElement("option");
+        option.value = op;
+        option.textContent = op;
+        if (op === tarea.prioridad) option.selected = true;
+        selectPri.appendChild(option);
+      });
+      selectPri.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
 
-    // --- SELECT PRIORIDAD ---
-    const selectPri = document.createElement("select");
-    ["Alta", "Baja"].forEach(op => {
-      const option = document.createElement("option");
-      option.value = op;
-      option.textContent = op;
-      if (op === tarea.prioridad) option.selected = true;
-      selectPri.appendChild(option);
-    });
-    selectPri.className = "px-4 py-1 rounded border border-gray-400 dark:border-gray-600 dark:bg-gray-700";
+      // Botón para confirmar cambios
+      const botonGuardar = crearBoton("Guardar", "green");
 
-    // --- BOTÓN GUARDAR ---
-    const botonGuardar = crearBoton("Guardar", "green");
+      // Se reemplazan los nodos visuales por controles de edición
+      contenedor.replaceChild(inputEdit, spanTexto);
+      divTarea.replaceChild(selectCat, divTarea.children[1]);
+      divTarea.replaceChild(selectPri, divTarea.children[2]);
+      divTarea.replaceChild(botonGuardar, boton);
 
-    // --- REEMPLAZOS ---
-    contenedor.replaceChild(inputEdit, spanTexto);
-    divTarea.replaceChild(selectCat, divTarea.children[1]);
-    divTarea.replaceChild(selectPri, divTarea.children[2]);
-    divTarea.appendChild(botonGuardar);
+      /**
+       * Valida y persiste los cambios de una tarea editada
+       */
+      const guardarCambios = () => {
+        limpiarError();
+        const nuevoTexto = inputEdit.value.trim();
+        const nuevaCategoria = selectCat.value;
+        const nuevaPrioridad = selectPri.value;
 
-    // --- FUNCION GUARDAR ---
-    const guardarCambios = () => {
-      const nuevoTexto = inputEdit.value.trim();
-      const nuevaCategoria = selectCat.value;
-      const nuevaPrioridad = selectPri.value;
+        const validacion = validarTarea(nuevoTexto, nuevaCategoria, nuevaPrioridad, tarea.id);
+        if (!validacion.ok) {
+          mostrarError(validacion.msg);
+          inputEdit.focus();
+          return;
+        }
 
-      // Validar, pero ignorando si es el mismo texto que ya tenía la tarea
-      if (!nuevoTexto) return alert("El texto no puede estar vacío");
-      if (nuevoTexto.length > 100) return alert("El texto no puede superar 100 caracteres");
-      if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(nuevoTexto)) return alert("Texto contiene caracteres no permitidos");
-      if (tareas.some(t => t.id !== tarea.id && t.texto.toLowerCase() === nuevoTexto.toLowerCase()))
-        return alert("Ya existe una tarea con ese texto");
+        tarea.texto = nuevoTexto;
+        tarea.categoria = nuevaCategoria;
+        tarea.prioridad = nuevaPrioridad;
 
-      tarea.texto = nuevoTexto;
-      tarea.categoria = nuevaCategoria;
-      tarea.prioridad = nuevaPrioridad;
-
-      // Restaurar spans y diseño original
-      spanTexto.textContent = nuevoTexto;
-      contenedor.replaceChild(spanTexto, inputEdit);
-
-      divTarea.replaceChild(crearEtiqueta(nuevaCategoria), selectCat);
-      divTarea.replaceChild(crearEtiqueta(nuevaPrioridad), selectPri);
-
-      divTarea.removeChild(botonGuardar);
-
-      // Actualizar dataset
-      divTarea.dataset.texto = nuevoTexto.toLowerCase();
-      divTarea.dataset.categoria = nuevaCategoria;
-      divTarea.dataset.prioridad = nuevaPrioridad;
-
-      guardarTareas();
-      aplicarFiltros();
-
-      // VOLVER A MOSTRAR BOTÓN EDITAR
-      boton.style.display = "inline-block";
-    };
-
-    botonGuardar.addEventListener("click", guardarCambios);
-
-    // --- ENTER = GUARDAR ---
-    inputEdit.addEventListener("keydown", e => { if (e.key === "Enter") guardarCambios(); });
-
-    // --- ESCAPE = CANCELAR ---
-    inputEdit.addEventListener("keydown", e => {
-      if (e.key === "Escape") {
+        // Se restaura la vista normal con los nuevos valores
+        spanTexto.textContent = nuevoTexto;
         contenedor.replaceChild(spanTexto, inputEdit);
-        divTarea.replaceChild(crearEtiqueta(tarea.categoria), selectCat);
-        divTarea.replaceChild(crearEtiqueta(tarea.prioridad), selectPri);
-        divTarea.removeChild(botonGuardar);
-        boton.style.display = "inline-block";
-      }
+        divTarea.replaceChild(crearEtiqueta(nuevaCategoria), selectCat);
+        divTarea.replaceChild(crearEtiqueta(nuevaPrioridad), selectPri);
+
+        // Se sincronizan datasets para búsqueda y filtros
+        divTarea.dataset.texto = nuevoTexto.toLowerCase();
+        divTarea.dataset.categoria = nuevaCategoria;
+        divTarea.dataset.prioridad = nuevaPrioridad;
+
+        if (!guardarTareas()) return;
+        aplicarFiltros();
+
+        // Se restaura el botón de edición en su posición original
+        divTarea.replaceChild(boton, botonGuardar);
+      };
+
+      botonGuardar.addEventListener("click", guardarCambios);
+
+      // Enter confirma cambios
+      inputEdit.addEventListener("keydown", e => {
+        if (e.key === "Enter") guardarCambios();
+      });
+
+      // Escape cancela edición y restaura vista original
+      inputEdit.addEventListener("keydown", e => {
+        if (e.key === "Escape") {
+          contenedor.replaceChild(spanTexto, inputEdit);
+          divTarea.replaceChild(crearEtiqueta(tarea.categoria), selectCat);
+          divTarea.replaceChild(crearEtiqueta(tarea.prioridad), selectPri);
+          divTarea.replaceChild(boton, botonGuardar);
+        }
+      });
+
+      inputEdit.focus();
     });
 
-    inputEdit.focus();
-  });
-
-  return boton;
-}
+    return boton;
+  }
 
   /**
    * Crea un botón reutilizable
@@ -402,8 +415,14 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.textContent = texto;
+    const baseClass = "text-white px-3 py-1 rounded-full focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm";
+    const colorClasses = {
+      blue: "bg-blue-700 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700",
+      red: "bg-red-700 hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700",
+      green: "bg-green-700 hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-700",
+    };
 
-    btn.className = `bg-${color}-700 text-white px-3 py-1 rounded-full hover:bg-${color}-500 focus:ring-2 hover:ring-2 hover:ring-gray-950 hover:scale-[1.05] transition shadow-sm dark:bg-${color}-600 dark:hover:bg-${color}-700`;
+    btn.className = `${baseClass} ${colorClasses[color] ?? colorClasses.blue}`;
 
     if (action) btn.setAttribute("data-action", action);
     if (taskId) btn.setAttribute("data-task-id", taskId);
@@ -460,17 +479,41 @@ function crearBotonEditar(tarea, contenedor, spanTexto, divTarea) {
   }
 
   /**
+   * Muestra un error de validación/guardado sin usar alert
+   * @param {string} mensaje
+   */
+  function mostrarError(mensaje) {
+    if (!errorFormulario) return;
+    errorFormulario.textContent = mensaje;
+    errorFormulario.classList.remove("hidden");
+    errorFormulario.setAttribute("role", "alert");
+    errorFormulario.setAttribute("aria-live", "polite");
+  }
+
+  /**
+   * Limpia el mensaje de error del formulario
+   */
+  function limpiarError() {
+    if (!errorFormulario) return;
+    errorFormulario.textContent = "";
+    errorFormulario.classList.add("hidden");
+  }
+
+  /**
    * Valida los datos de una tarea antes de crearla
    * @param {string} texto
    * @param {string} categoria
    * @param {string} prioridad
+   * @param {string} [idActual]
    * @returns {{ok:boolean, msg?:string}}
    */
-  function validarTarea(texto, categoria, prioridad) {
+  function validarTarea(texto, categoria, prioridad, idActual = "") {
     if (!texto) return { ok: false, msg: "El texto no puede estar vacío" };
     if (texto.length > 100) return { ok: false, msg: "El texto no puede superar 100 caracteres" };
     if (!/^[\w\sáéíóúüñ.,!?()-]+$/.test(texto)) return { ok: false, msg: "Texto contiene caracteres no permitidos" };
-    if (tareas.some(t => t.texto.toLowerCase() === texto.toLowerCase())) return { ok: false, msg: "Ya existe una tarea con ese texto" };
+    if (tareas.some(t => t.id !== idActual && t.texto.toLowerCase() === texto.toLowerCase())) {
+      return { ok: false, msg: "Ya existe una tarea con ese texto" };
+    }
     if (!["Trabajo","Personal"].includes(categoria)) return { ok: false, msg: "Categoría inválida" };
     if (!["Alta","Baja"].includes(prioridad)) return { ok: false, msg: "Prioridad inválida" };
     return { ok: true };
