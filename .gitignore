@@ -32,3 +32,4 @@ yarn-error.log*
 /dist/
 /build/
 /coverage/
+/.env
