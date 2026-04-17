@@ -15,6 +15,7 @@
 !/docs/
 !/docs/ai/
 !/docs/ai/**
+!/server/**
 
 # Still ignore common junk even if someone unignores broadly later
 .DS_Store
@@ -32,4 +33,6 @@ yarn-error.log*
 /dist/
 /build/
 /coverage/
-/.env
+/server/.env
+/server/node_modules/
+

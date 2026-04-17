@@ -1,13 +1,10 @@
 const API_URL = 'http://localhost:3000/api/v1/tasks';
 
 async function cargarTareas() {
-  const res = await fetch(API_URL);
+  const res = await fetch('http://localhost:3000/api/v1/tasks');
   const tasks = await res.json();
 
-  console.log(tasks); // de momento solo verlas
 }
-cargarTareas();
-
 
 (() => {
   // Claves de persistencia en localStorage
