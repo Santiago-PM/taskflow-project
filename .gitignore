@@ -15,6 +15,7 @@
 !/docs/
 !/docs/ai/
 !/docs/ai/**
+!/server/
 !/server/**
  
 # Still ignore common junk even if someone unignores broadly later
