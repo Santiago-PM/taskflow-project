@@ -38,7 +38,7 @@ async function cargarTareas() {
   const checkboxes = document.querySelectorAll(".filtros input[type='checkbox']");
   const inputBusqueda = document.getElementById("busquedaTarea");
 
-  // Render inicial
+  // Render inicial 
   renderLista();
   aplicarFiltros();
   sincronizarModoOscuroUI();
