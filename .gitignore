@@ -16,7 +16,7 @@
 !/docs/ai/
 !/docs/ai/**
 !/server/**
-
+ 
 # Still ignore common junk even if someone unignores broadly later
 .DS_Store
 Thumbs.db
