@@ -4,6 +4,28 @@ async function cargarTareas() {
   const res = await fetch('http://localhost:3000/api/v1/tasks');
   const tasks = await res.json();
 
+  console.log("Tareas cargadas:", tasks);
+}
+
+async function crearTareaBackend(title) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title })
+  });
+
+  const data = await res.json();
+  console.log("CREADA:", data);
+}
+
+async function borrarTareaBackend(id) {
+  await fetch(`${API_URL}/${id}`, {
+    method: 'DELETE'
+  });
+
+  console.log("BORRADA:", id);
 }
 
 (() => {
