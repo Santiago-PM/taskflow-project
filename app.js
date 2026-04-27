@@ -1,37 +1,8 @@
-const API_URL = 'http://localhost:3000/api/v1/tasks';
 
-async function cargarTareas() {
-  const res = await fetch('http://localhost:3000/api/v1/tasks');
-  const tasks = await res.json();
+import { cargarTareas, crearTareaBackend, borrarTareaBackend, actualizarTareaBackend, actualizarEstadoTareaBackend } 
+from './server/src/api/client.js';
 
-  console.log("Tareas cargadas:", tasks);
-}
-
-async function crearTareaBackend(title) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ title })
-  });
-
-  const data = await res.json();
-  console.log("CREADA:", data);
-}
-
-async function borrarTareaBackend(id) {
-  await fetch(`${API_URL}/${id}`, {
-    method: 'DELETE'
-  });
-
-  console.log("BORRADA:", id);
-}
-
-(() => {
-  // Claves de persistencia en localStorage
-  const STORAGE_TASKS_KEY = "tareas";
-  const STORAGE_DARKMODE_KEY = "darkMode";
+const STORAGE_DARKMODE_KEY = "darkMode";
 
   /**
    * @typedef {Object} Tarea
@@ -45,7 +16,23 @@ async function borrarTareaBackend(id) {
 
   /** Estado en memoria de todas las tareas */
   /** @type {Tarea[]} */
-  let tareas = cargarTareas();
+  
+  let tareas = [];
+
+  async function init() {
+  setLoading("Cargando tareas...");
+  try {
+    tareas = await cargarTareas();
+    renderLista();
+    aplicarFiltros();
+    setSuccess("Tareas cargadas.");
+  } catch (error) {
+    mostrarError("No se pudieron cargar las tareas.");
+    console.error(error);
+  } finally {
+    clearLoading();
+  }
+  }
 
   // Referencias a elementos del DOM
   const formulario = document.getElementById("formularioTareas");
@@ -54,21 +41,18 @@ async function borrarTareaBackend(id) {
   const selectPrioridad = document.getElementById("prioridad");
   const listaTareas = document.getElementById("listaTareas");
   const botonModoOscuro = document.getElementById("botonModoOscuro");
+  const estadoRed = document.getElementById("estadoRed");
   const errorFormulario = document.getElementById("errorFormulario");
 
   // Filtros de la UI
   const checkboxes = document.querySelectorAll(".filtros input[type='checkbox']");
   const inputBusqueda = document.getElementById("busquedaTarea");
 
-  // Render inicial 
-  renderLista();
-  aplicarFiltros();
+  // Render inicial de UI (la lista real se carga en init con backend).
   sincronizarModoOscuroUI();
+  init();
 
-  /**
-   * Maneja el alta de una nueva tarea desde el formulario principal
-   */
-  formulario.addEventListener("submit", (e) => {
+  formulario.addEventListener("submit", async (e) => {
     e.preventDefault();
     limpiarError();
 
@@ -82,37 +66,52 @@ async function borrarTareaBackend(id) {
       return;
     }
 
-    /** @type {Tarea} */
-    const tarea = {
-      id: generarId(),
-      texto,
-      categoria,
-      prioridad,
-      completada: false,
-      createdAt: Date.now(),
-    };
+    try {
+      setLoading("Guardando tarea...");
+      await crearTareaBackend({
+        texto,
+        categoria,
+        prioridad,
+        completada: false,
+        createdAt: Date.now()
+      });
 
-    tareas.push(tarea);
-    guardarTareas();
-    renderLista();
-    aplicarFiltros();
+      tareas = await cargarTareas();
+      renderLista();
+      aplicarFiltros();
+      setSuccess("Tarea guardada.");
+    } catch (error) {
+      mostrarError("No se pudo crear la tarea. Revisa el servidor.");
+      console.error(error);
+      return;
+    } finally {
+      clearLoading();
+    }
+
     inputTarea.value = "";
     inputTarea.focus();
   });
 
-  /**
-   * Maneja la eliminación de tareas mediante delegación de eventos
-   */
-  listaTareas.addEventListener("click", (e) => {
+  listaTareas.addEventListener("click", async (e) => {
     const boton = e.target.closest("button[data-action='delete']");
     if (!boton) return;
 
     const id = boton.dataset.taskId;
-    tareas = tareas.filter(t => t.id !== id);
 
-    guardarTareas();
-    renderLista();
-    aplicarFiltros();
+    try {
+      setLoading("Eliminando tarea...");
+      await borrarTareaBackend(id);
+
+      tareas = await cargarTareas();
+      renderLista();
+      aplicarFiltros();
+      setSuccess("Tarea eliminada.");
+    } catch (error) {
+      mostrarError("No se pudo borrar la tarea.");
+      console.error(error);
+    } finally {
+      clearLoading();
+    }
   });
 
   /**
@@ -132,57 +131,6 @@ async function borrarTareaBackend(id) {
   // ---------------- FUNCIONES ----------------
 
   /**
-   * Genera un ID único
-   * @returns {string}
-   */
-  function generarId() {
-    return crypto.randomUUID
-      ? crypto.randomUUID()
-      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  }
-
-  /**
-   * Carga tareas desde localStorage
-   * @returns {Tarea[]}
-   */
-  function cargarTareas() {
-    try {
-      const raw = localStorage.getItem(STORAGE_TASKS_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-
-      if (!Array.isArray(parsed)) return [];
-
-      return parsed
-        .filter(t => t && typeof t === "object")
-        .map(t => ({
-          id: t.id || generarId(),
-          texto: String(t.texto ?? ""),
-          categoria: String(t.categoria ?? ""),
-          prioridad: String(t.prioridad ?? ""),
-          completada: Boolean(t.completada ?? false),
-          createdAt: typeof t.createdAt === "number" ? t.createdAt : Date.now(),
-        }))
-        .filter(t => t.texto.trim() !== "");
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * Guarda tareas en localStorage
-   * @returns {boolean} true si se guardó correctamente; false si ocurrió un error
-   */
-  function guardarTareas() {
-    try {
-      localStorage.setItem(STORAGE_TASKS_KEY, JSON.stringify(tareas));
-      return true;
-    } catch {
-      mostrarError("No se pudieron guardar los cambios. Revisa el almacenamiento del navegador.");
-      return false;
-    }
-  }
-
-  /**
    * Aplica el modo oscuro
    * @param {boolean} esDark
    */
@@ -193,7 +141,7 @@ async function borrarTareaBackend(id) {
     botonModoOscuro.setAttribute("aria-pressed", esDark);
     botonModoOscuro.textContent = esDark ? "Modo Claro" : "Modo Oscuro";
 
-    localStorage.setItem(STORAGE_DARKMODE_KEY, String(esDark));
+    localStorage.setItem(STORAGE_DARKMODE_KEY, String(esDark)); // <--- Hay que cambiarlo a server
   }
 
   /**
@@ -207,6 +155,8 @@ async function borrarTareaBackend(id) {
     }
 
     tareas.forEach(t => listaTareas.appendChild(crearNodoTarea(t)));
+
+    console.log(tareas);
   }
 
   /**
@@ -300,15 +250,33 @@ async function borrarTareaBackend(id) {
     checkbox.type = "checkbox";
     checkbox.checked = tarea.completada;
 
-    checkbox.addEventListener("change", () => {
+    checkbox.addEventListener("change", async () => {
       tarea.completada = checkbox.checked;
       div.dataset.completada = tarea.completada;
 
       span.classList.toggle("line-through", tarea.completada);
       span.classList.toggle("opacity-50", tarea.completada);
 
-      guardarTareas();
-      aplicarFiltros();
+      try {
+        setLoading("Actualizando estado...");
+        await actualizarEstadoTareaBackend(tarea.id, tarea.completada);
+
+        tareas = await cargarTareas();
+        renderLista();
+        aplicarFiltros();
+        setSuccess("Estado actualizado.");
+      } catch (error) {
+        // Si falla el backend, deshacemos el check para no dejar la UI en estado falso.
+        tarea.completada = !checkbox.checked;
+        checkbox.checked = tarea.completada;
+        div.dataset.completada = tarea.completada;
+        span.classList.toggle("line-through", tarea.completada);
+        span.classList.toggle("opacity-50", tarea.completada);
+        mostrarError("No se pudo actualizar el estado de la tarea.");
+        console.error(error);
+      } finally {
+        clearLoading();
+      }
     });
 
     return checkbox;
@@ -375,7 +343,7 @@ async function borrarTareaBackend(id) {
       /**
        * Valida y persiste los cambios de una tarea editada
        */
-      const guardarCambios = () => {
+      const guardarCambios = async () => {
         limpiarError();
         const nuevoTexto = inputEdit.value.trim();
         const nuevaCategoria = selectCat.value;
@@ -388,26 +356,44 @@ async function borrarTareaBackend(id) {
           return;
         }
 
+        try {
+          setLoading("Guardando cambios...");
+          await actualizarTareaBackend(tarea.id, {
+            texto: nuevoTexto,
+            categoria: nuevaCategoria,
+            prioridad: nuevaPrioridad,
+            completada: tarea.completada
+          });
+        } catch (error) {
+          mostrarError("No se pudo guardar la edición.");
+          console.error(error);
+          return;
+        } finally {
+          clearLoading();
+        }
+
+        // Actualizamos el objeto local para mantener consistencia.
         tarea.texto = nuevoTexto;
         tarea.categoria = nuevaCategoria;
         tarea.prioridad = nuevaPrioridad;
 
-        // Se restaura la vista normal con los nuevos valores
+        // Se restaura la vista normal con los nuevos valores.
         spanTexto.textContent = nuevoTexto;
         contenedor.replaceChild(spanTexto, inputEdit);
         divTarea.replaceChild(crearEtiqueta(nuevaCategoria), selectCat);
         divTarea.replaceChild(crearEtiqueta(nuevaPrioridad), selectPri);
 
-        // Se sincronizan datasets para búsqueda y filtros
+        // Se sincronizan datasets para búsqueda y filtros.
         divTarea.dataset.texto = nuevoTexto.toLowerCase();
         divTarea.dataset.categoria = nuevaCategoria;
         divTarea.dataset.prioridad = nuevaPrioridad;
 
-        if (!guardarTareas()) return;
-        aplicarFiltros();
-
-        // Se restaura el botón de edición en su posición original
+        // Se restaura el botón de edición y refresca desde backend.
         divTarea.replaceChild(boton, botonGuardar);
+        tareas = await cargarTareas();
+        renderLista();
+        aplicarFiltros();
+        setSuccess("Edición guardada.");
       };
 
       botonGuardar.addEventListener("click", guardarCambios);
@@ -514,6 +500,7 @@ async function borrarTareaBackend(id) {
    */
   function mostrarError(mensaje) {
     if (!errorFormulario) return;
+    if (estadoRed) estadoRed.classList.add("hidden");
     errorFormulario.textContent = mensaje;
     errorFormulario.classList.remove("hidden");
     errorFormulario.setAttribute("role", "alert");
@@ -527,6 +514,33 @@ async function borrarTareaBackend(id) {
     if (!errorFormulario) return;
     errorFormulario.textContent = "";
     errorFormulario.classList.add("hidden");
+  }
+
+  // Estado de carga discreto para peticiones de red.
+  function setLoading(mensaje) {
+    if (!estadoRed) return;
+    estadoRed.textContent = mensaje;
+    estadoRed.classList.remove("hidden");
+  }
+
+  // Limpia el estado de carga.
+  function clearLoading() {
+    if (!estadoRed) return;
+    estadoRed.textContent = "";
+    estadoRed.classList.add("hidden");
+  }
+
+  // Mensaje corto de éxito para feedback al usuario.
+  function setSuccess(mensaje) {
+    if (!estadoRed) return;
+    estadoRed.textContent = mensaje;
+    estadoRed.classList.remove("hidden");
+    setTimeout(() => {
+      if (estadoRed.textContent === mensaje) {
+        estadoRed.textContent = "";
+        estadoRed.classList.add("hidden");
+      }
+    }, 1200);
   }
 
   /**
@@ -548,4 +562,3 @@ async function borrarTareaBackend(id) {
     if (!["Alta","Baja"].includes(prioridad)) return { ok: false, msg: "Prioridad inválida" };
     return { ok: true };
   }
-})();

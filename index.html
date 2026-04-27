@@ -10,7 +10,7 @@
     </head>
     
     <body class="font-[Mulish] bg-amber-100 dark:bg-gray-800"> 
-        <script src="app.js" defer></script>
+        
         <ul id="lista"></ul>
 
         <header class="flex items-center justify-between p-5 bg-gray-800 rounded-md dark:bg-gray-950">
@@ -77,13 +77,15 @@
 
                             <button type="submit" class="p-2 my-1 mr-1 bg-gray-300 rounded-md box-border hover:bg-gray-100 hover:scale-[1.02] transition dark:hover:bg-slate-500 dark:bg-gray-600 dark:text-white">Añadir</button>
                         </form>
+                        <p id="estadoRed" class="text-sm mt-1 text-gray-600 dark:text-gray-300 hidden" aria-live="polite"></p>
+                        <p id="errorFormulario" class="text-sm mt-1 text-red-700 dark:text-red-300 hidden" aria-live="polite"></p>
 
                         <div id="listaTareas" class = "flex flex-col gap-2 my-1 mr-1"></div>
                 </section>
             </main>
        
         </div>
-
+        <script type="module" src="app.js"></script>
     </body>
     
 </html>

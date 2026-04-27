@@ -7,6 +7,8 @@ const taskController = require('../controllers/task.controller'); // Importa el 
 router.get('/', taskController.getTasks); // Atiende GET / devolviendo la colección de tareas.
 // Registra la ruta para crear una tarea nueva.
 router.post('/', taskController.createTask); // Atiende POST / validando y guardando una nueva tarea.
+router.put('/:id', taskController.updateTask); // Atiende PUT /:id para editar una tarea existente.
+router.patch('/:id/status', taskController.patchTaskStatus); // Atiende PATCH /:id/status para actualizar solo completada.
 // Registra la ruta para eliminar una tarea existente por id.
 router.delete('/:id', taskController.deleteTask); // Atiende DELETE /:id borrando la tarea indicada.
 

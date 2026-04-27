@@ -29,9 +29,44 @@ const eliminarTarea = (id) => { // Define la función de borrado de tarea.
   tasks.splice(index, 1); // Elimina del array la tarea encontrada en la posición calculada.
 };
 
+// Actualiza una tarea existente por id y devuelve el resultado.
+const actualizarTarea = (id, data) => { // Define la función para editar una tarea ya creada.
+  const index = tasks.findIndex(t => t.id === id); // Busca la tarea en el array por su id.
+
+  if (index === -1) { // Comprueba si no existe ninguna tarea con ese id.
+    throw new Error('NOT_FOUND'); // Lanza error para que el controlador responda 404.
+  }
+
+  tasks[index] = { // Reemplaza la tarea manteniendo propiedades anteriores.
+    ...tasks[index], // Conserva datos existentes.
+    ...data, // Aplica los cambios recibidos del cliente.
+    id // Asegura que el id no se modifique accidentalmente.
+  };
+
+  return tasks[index]; // Devuelve la tarea actualizada.
+};
+
+// Actualiza solo el estado completada de una tarea.
+const actualizarEstadoTarea = (id, completada) => { // Define la función para cambiar únicamente el estado.
+  const index = tasks.findIndex(t => t.id === id); // Busca la tarea por su id.
+
+  if (index === -1) { // Comprueba si la tarea no existe.
+    throw new Error('NOT_FOUND'); // Lanza error de dominio para respuesta 404.
+  }
+
+  tasks[index] = { // Crea copia actualizada de la tarea.
+    ...tasks[index], // Conserva el resto de campos.
+    completada: Boolean(completada) // Solo modifica el campo completada.
+  };
+
+  return tasks[index]; // Devuelve la tarea con el estado actualizado.
+};
+
 // Exporta las funciones del servicio para su uso desde los controladores.
 module.exports = { // Expone la API pública del servicio de tareas.
   obtenerTodas,
   crearTarea,
-  eliminarTarea
+  eliminarTarea,
+  actualizarTarea,
+  actualizarEstadoTarea
 };
