@@ -11,6 +11,7 @@
 !/style.css
 !/tailwind.config.js
 !/postcss.config.js
+!/vercel.json
 
 !/docs/
 !/docs/ai/
