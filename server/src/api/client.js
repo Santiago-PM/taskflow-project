@@ -1,4 +1,4 @@
-const API_URL = 'https://taskflow-project-q6po.vercel.app/api/v1/tasks';
+const API_URL = 'https://taskflow-project-q6po.vercel.app';
 
 export async function cargarTareas() {
   const res = await fetch(API_URL);
