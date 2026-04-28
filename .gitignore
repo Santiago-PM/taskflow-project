@@ -13,6 +13,7 @@
 !/postcss.config.js
 !/vercel.json
 
+
 !/docs/
 !/docs/ai/
 !/docs/ai/**
@@ -37,4 +38,6 @@ yarn-error.log*
 /coverage/
 /server/.env
 /server/node_modules/
+/.vercel
+/.env*.local
 
