@@ -38,6 +38,6 @@ yarn-error.log*
 /coverage/
 /server/.env
 /server/node_modules/
-/.vercel
-/.env*.local
+/server/.vercel
+/server/.env*.local
 
