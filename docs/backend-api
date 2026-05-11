@@ -1,0 +1,39 @@
+# Información sobre **Axios**, **Postman**, **Sentry** y **Swagger**.
+
+## Que son y para que se usan?
+
+---
+
+## **Axios**
+
+Axios es una librería de JavaScript utilizada para realizar peticiones HTTP desde el frontend o backend. Funciona como alternativa a `fetch()` y simplifica mucho la comunicación con APIs REST.
+
+Permite realizar peticiones como:
+
+- GET
+- POST
+- PUT
+- DELETE
+
+Además incluye características útiles como:
+
+- Conversión automática de JSON
+- Manejo más sencillo de errores
+- Interceptores de peticiones y respuestas
+- Configuración global de URLs y cabeceras
+- Compatibilidad con navegadores y Node.js
+
+### ¿Por qué se usa?
+
+Se usa para facilitar la comunicación entre aplicaciones y servidores, haciendo el código más limpio y mantenible que usando `fetch()` directamente en proyectos grandes.
+
+Ejemplo:
+
+```js
+const response = await axios.get('/api/tasks');
+console.log(response.data);
+
+---
+
+## **Postman**
+

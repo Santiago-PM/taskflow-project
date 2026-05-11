@@ -257,7 +257,7 @@ Resultado esperado: la tarea se actualiza en pantalla y en backend.
 Se despliega separando el frontend y el backend en dos proyectos distintos de Vercel, ambos conectados al mismo repositorio de Github con ligeros cambios en el despliegue.
 
 - El **backend** se despliega en otro proyecto de Vercel aparte como función **serverless**.
-  Configuramos la raíz del despliegue en la carpeta /server, detectando automaticamente Node.js.
+  Configuramos la raíz del despliegue en la carpeta /server, detectando automáticamente Node.js.
   Con el archivo /server/vercel.json definimos el archivo que ejecutar Vercel como serverless.
 
     (Extracto del archivo):
@@ -279,9 +279,9 @@ Se despliega separando el frontend y el backend en dos proyectos distintos de Ve
     }
 
 
-- El **frontend** se despliega como una web estatica.
+- El **frontend** se despliega como una web estética.
 
-  El despliegue se hace desde la raíz principal del proyecto **/taskflow-project**, detectando automaticamente los archivos **index.html**, **app.js** y **style.css**.
+  El despliegue se hace desde la raíz principal del proyecto **/taskflow-project**, detectando automáticamente los archivos **index.html**, **app.js** y **style.css**.
 
   Y en el archivo /server/src/api/client.js configuramos la comunicación red del frontend con el backend, centralizando las peticiones HTTP usando fetch(), ademas del enlace URL al backend desplegado en Vercel para consumir la API REST.
 
