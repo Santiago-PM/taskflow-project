@@ -262,6 +262,7 @@ Se despliega separando el frontend y el backend en dos proyectos distintos de Ve
 
     (Extracto del archivo):
 
+    ```json
     {
       "version": 2,
       "builds": [
@@ -277,7 +278,7 @@ Se despliega separando el frontend y el backend en dos proyectos distintos de Ve
         }
       ]
     }
-
+    ```
 
 - El **frontend** se despliega como una web estética.
 
