@@ -18,130 +18,272 @@ Este repositorio corresponde a un **proyecto de prácticas**, donde subo archivo
 - Asignar categoría (Trabajo / Personal).
 - Asignar prioridad (Alta / Baja).
 - Marcar tareas como completadas.
+- Editar tareas.
 - Eliminar tareas.
-- Editar texto de tareas.
-- Filtrar tareas por categoría.
-- Filtrar tareas por prioridad.
-- Filtrar tareas por estado de completado.
+- Filtrar por categoría, prioridad y estado.
 - Buscar tareas por texto.
-- Guardar tareas en el navegador mediante `localStorage`.
-- Interfaz adaptada a móvil (responsive).
+- Interfaz responsive.
 - Modo oscuro.
-- No es posible crear una tarea sin texto.
-- Si una tarea tiene mucho texto, las palabras se dividen correctamente; en caso de una palabra muy larga, también se divide.
+- Las tareas ahora se gestionan en backend (API REST con Express).
+- `localStorage` se usa solo para guardar preferencia de tema claro/oscuro.
 
 ---
 
 ## Documentación funcional del proyecto
 
-### Flujo principal de la aplicación
+### Flujo principal de la aplicación (Frontend + Backend)
 
-1. El usuario crea una tarea desde el formulario (`texto`, `categoría` y `prioridad`).
-2. La tarea se valida antes de guardarse.
-3. Si la validación es correcta, se añade a la lista y se guarda en `localStorage`.
-4. La interfaz se vuelve a renderizar y se aplican filtros/búsqueda activos.
-5. El usuario puede completar, editar o eliminar tareas en cualquier momento.
+1. El usuario crea/edita/elimina una tarea desde la interfaz.
+2. `app.js` valida datos en frontend para dar feedback rápido.
+3. El frontend llama a la API REST (`fetch`) usando `server/src/api/client.js`.
+4. El backend (Express) vuelve a validar y procesa la petición.
+5. El backend responde en JSON y el frontend vuelve a renderizar la lista.
+6. Los filtros y la búsqueda se aplican sobre lo que hay en pantalla.
 
-### Reglas de validación de tareas
+### Persistencia actual de datos
 
-La validación se aplica tanto al **crear** como al **editar** tareas:
+- **Tareas:** se guardan en backend, en memoria del servidor (`server/services/task.service.js`).
+- **Tema oscuro/claro:** se guarda en `localStorage` con la clave `darkMode`.
+
+> Nota: al estar en memoria, si se reinicia el servidor las tareas se pierden. Es normal en esta versión.
+
+### Reglas de validación de tareas (frontend)
+
+La validación se aplica al crear y editar:
 
 - El texto no puede estar vacío.
 - El texto no puede superar 100 caracteres.
 - Solo se permiten caracteres alfanuméricos y signos básicos (`.,!?()-` y acentos).
-- No se permiten tareas duplicadas (comparación por texto, ignorando mayúsculas/minúsculas).
+- No se permiten tareas duplicadas (comparando texto en minúsculas).
 - La categoría debe ser `Trabajo` o `Personal`.
 - La prioridad debe ser `Alta` o `Baja`.
 
-### Filtros y búsqueda
+### Reglas de validación en backend (API)
 
-La lista de tareas puede combinar:
+Además de frontend, el backend vuelve a validar:
 
-- Filtro por categoría.
-- Filtro por prioridad.
-- Filtro por estado (`Completado` / `No completado`).
-- Búsqueda por texto en tiempo real.
+- `texto` obligatorio y con mínimo 3 caracteres.
+- `categoria` solo `Trabajo` o `Personal`.
+- `prioridad` solo `Alta` o `Baja`.
+- `completada` debe ser booleano en el endpoint de estado.
 
-Todos los filtros se aplican de forma conjunta sobre los datos visibles en pantalla.
+---
 
-### Ejemplos de uso
+## Arquitectura de carpetas
 
-#### Ejemplo 1: Crear y completar una tarea
+Esta es la estructura principal elegida:
 
-1. Escribe `Preparar informe semanal` en el campo **Nueva tarea**.
+```text
+taskflow-project/
+├─ app.js
+├─ index.html
+├─ style.css
+├─ docs/
+└─ server/
+   ├─ src/
+   │  ├─ index.js
+   │  ├─ api/
+   │  │  └─ client.js
+   │  ├─ config/
+   │  │  └─ env.js
+   │  ├─ controllers/
+   │  │  └─ task.controller.js
+   │  └─ routes/
+   │     └─ task.routes.js
+   └─ services/
+      └─ task.service.js
+```
+
+### ¿Qué hace cada parte?
+
+- `app.js`: lógica de UI, eventos, validación en cliente y renderizado.
+- `server/src/api/client.js`: capa de acceso HTTP desde frontend a backend.
+- `server/src/routes/task.routes.js`: define los endpoints REST.
+- `server/src/controllers/task.controller.js`: maneja request/response y validación del body.
+- `server/services/task.service.js`: lógica de negocio y almacenamiento en memoria.
+- `server/src/config/env.js`: carga variables de entorno (por ejemplo el puerto).
+
+Esta separación ayuda a que el código sea más limpio: rutas -> controladores -> servicio.
+
+---
+
+## Middlewares (explicado simple pero técnico)
+
+En `server/src/index.js` se usan estos middlewares:
+
+### 1) `cors()`
+
+- Habilita **Cross-Origin Resource Sharing**.
+- Permite que el frontend pueda hacer peticiones al backend aunque estén en dominios/puertos distintos.
+
+### 2) `express.json()`
+
+- Middleware de parsing.
+- Convierte automáticamente el body JSON de la request en `req.body`.
+- Sin esto, no podríamos leer los datos de una tarea enviada por `POST`, `PUT` o `PATCH`.
+
+### 3) `logger` personalizado
+
+- Middleware propio que mide tiempo de respuesta.
+- Usa `res.on('finish', ...)` para saber cuándo termina la respuesta.
+- Muestra en consola: método HTTP, URL, código de estado y duración en ms.
+- Sirve para trazabilidad básica y debugging.
+
+### 4) Middleware global de errores
+
+- Se ejecuta cuando algo falla y se llama a `next(error)`.
+- Si llega error `NOT_FOUND`, responde `404`.
+- Para errores no controlados, responde `500`.
+- Evita que el servidor rompa y da respuestas consistentes.
+
+---
+
+## API REST de tareas
+
+Base URL:
+
+`/api/v1/tasks`
+
+### Endpoints disponibles
+
+- `GET /api/v1/tasks` -> Listar tareas.
+- `POST /api/v1/tasks` -> Crear tarea.
+- `PUT /api/v1/tasks/:id` -> Editar tarea completa.
+- `PATCH /api/v1/tasks/:id/status` -> Cambiar solo `completada`.
+- `DELETE /api/v1/tasks/:id` -> Eliminar tarea.
+
+### Estructura de una tarea
+
+```json
+{
+  "id": 1,
+  "texto": "Preparar informe semanal",
+  "categoria": "Trabajo",
+  "prioridad": "Alta",
+  "completada": false,
+  "createdAt": 1746543000000
+}
+```
+
+---
+
+## Ejemplos prácticos para usar la API
+
+> Los ejemplos están con `curl`, pero se puede hacer igual con Postman/Insomnia.
+
+### 1) Obtener todas las tareas
+
+```bash
+curl -X GET "https://taskflow-project-tawny.vercel.app/api/v1/tasks"
+```
+
+### 2) Crear una tarea
+
+```bash
+curl -X POST "https://taskflow-project-tawny.vercel.app/api/v1/tasks" \
+  -H "Content-Type: application/json" \
+  -d "{\"texto\":\"Estudiar Express\",\"categoria\":\"Trabajo\",\"prioridad\":\"Alta\",\"completada\":false,\"createdAt\":1746543000000}"
+```
+
+### 3) Editar una tarea completa
+
+```bash
+curl -X PUT "https://taskflow-project-tawny.vercel.app/api/v1/tasks/1" \
+  -H "Content-Type: application/json" \
+  -d "{\"texto\":\"Estudiar Express y middlewares\",\"categoria\":\"Trabajo\",\"prioridad\":\"Alta\",\"completada\":false}"
+```
+
+### 4) Cambiar solo el estado de completada
+
+```bash
+curl -X PATCH "https://taskflow-project-tawny.vercel.app/api/v1/tasks/1/status" \
+  -H "Content-Type: application/json" \
+  -d "{\"completada\":true}"
+```
+
+### 5) Eliminar una tarea
+
+```bash
+curl -X DELETE "https://taskflow-project-tawny.vercel.app/api/v1/tasks/1"
+```
+
+---
+
+## Ejemplos de uso de la app (usuario final)
+
+### Ejemplo 1: Crear y completar una tarea
+
+1. Escribe `Preparar informe semanal` en el campo de nueva tarea.
 2. Selecciona categoría `Trabajo` y prioridad `Alta`.
 3. Pulsa **Añadir**.
-4. Marca el checkbox de la tarea para cambiarla a completada.
+4. Marca el checkbox de la tarea.
 
-Resultado esperado: la tarea aparece en la lista y, al completarla, se muestra tachada.
+Resultado esperado: la tarea aparece y al completarla se muestra tachada.
 
-#### Ejemplo 2: Buscar tareas por texto
+### Ejemplo 2: Buscar tareas por texto
 
-1. Crea varias tareas con textos diferentes (por ejemplo: `Comprar pan`, `Comprar fruta`, `Llamar al banco`).
-2. En el campo de búsqueda, escribe `comprar`.
+1. Crea varias tareas.
+2. En la búsqueda escribe `comprar`.
 
-Resultado esperado: solo se muestran las tareas que contienen el texto `comprar`.
+Resultado esperado: solo aparecen tareas que contengan ese texto.
 
-#### Ejemplo 3: Filtrar por categoría y estado
+### Ejemplo 3: Filtrar por categoría y estado
 
-1. Activa el filtro de categoría `Personal`.
-2. Activa el filtro de estado `No completada`.
+1. Activa categoría `Personal`.
+2. Activa estado `No completado`.
 
-Resultado esperado: solo se ven tareas personales que aún no están completadas.
+Resultado esperado: solo se ven tareas personales pendientes.
 
-#### Ejemplo 4: Editar una tarea existente
+### Ejemplo 4: Editar una tarea existente
 
-1. Pulsa **Editar** sobre una tarea.
-2. Cambia el texto, la categoría o la prioridad.
-3. Pulsa **Guardar** o presiona `Enter`.
+1. Pulsa **Editar** en una tarea.
+2. Cambia texto/categoría/prioridad.
+3. Pulsa **Guardar** o `Enter`.
 
-Resultado esperado: la tarea se actualiza en pantalla y queda guardada para próximas sesiones.
+Resultado esperado: la tarea se actualiza en pantalla y en backend.
 
-### Persistencia de datos
+---
 
-La aplicación guarda información en `localStorage` mediante dos claves:
+## Modo oscuro
 
-- `tareas`: almacena todas las tareas creadas.
-- `darkMode`: guarda la preferencia de tema (oscuro/claro).
+- El botón alterna entre tema claro y oscuro.
+- Se guarda preferencia en `localStorage` (`darkMode`).
+- También se actualiza `aria-pressed` para accesibilidad.
 
-Al recargar la página, la app recupera automáticamente ambos estados.
+---
 
-### Modo oscuro
+## Despliegue de la web en Vercel
 
-- El botón de cabecera alterna entre modo claro y oscuro.
-- La preferencia se conserva entre sesiones.
-- También se actualiza el estado accesible del botón (`aria-pressed`).
+Se despliega separando el frontend y el backend en dos proyectos distintos de Vercel, ambos conectados al mismo repositorio de Github con ligeros cambios en el despliegue.
 
-### Edición y estados de tarea
+- El **backend** se despliega en otro proyecto de Vercel aparte como función **serverless**.
+  Configuramos la raíz del despliegue en la carpeta /server, detectando automaticamente Node.js.
+  Con el archivo /server/vercel.json definimos el archivo que ejecutar Vercel como serverless.
 
-- Cada tarea dispone de checkbox para marcar completado/no completado.
-- El botón **Editar** permite modificar texto, categoría y prioridad en línea.
-- El botón **Eliminar** borra la tarea y actualiza almacenamiento y filtros.
-- Una tarea completada se muestra tachada y con menor opacidad.
+    (Extracto del archivo):
 
-### Funciones clave de `app.js`
+    {
+      "version": 2,
+      "builds": [
+        {
+          "src": "src/index.js",
+          "use": "@vercel/node"
+        }
+      ],
+      "routes": [
+        {
+          "src": "/(.*)",
+          "dest": "src/index.js"
+        }
+      ]
+    }
 
-- `cargarTareas()`: recupera tareas desde `localStorage` y sanea datos inválidos.
-- `guardarTareas()`: persiste el estado actual de tareas.
-- `validarTarea(...)`: centraliza todas las reglas de validación.
-- `renderLista()`: reconstruye la lista de tareas en el DOM.
-- `aplicarFiltros()`: decide qué tareas se muestran según filtros y búsqueda.
-- `crearNodoTarea(tarea)`: construye el bloque visual completo de cada tarea.
-- `crearCheckbox(...)`: maneja cambios de estado completado.
-- `crearBotonEditar(...)`: implementa edición inline y guardado de cambios.
-- `aplicarModoOscuro(esDark)`: aplica clases de tema y guarda preferencia.
-- `sincronizarModoOscuroUI()`: restaura tema al iniciar la aplicación.
 
-### Estructura base de una tarea
+- El **frontend** se despliega como una web estatica.
 
-Cada tarea maneja internamente esta información:
+  El despliegue se hace desde la raíz principal del proyecto **/taskflow-project**, detectando automaticamente los archivos **index.html**, **app.js** y **style.css**.
 
-- `id`: identificador único.
-- `texto`: contenido de la tarea.
-- `categoria`: `Trabajo` o `Personal`.
-- `prioridad`: `Alta` o `Baja`.
-- `completada`: estado booleano.
-- `createdAt`: fecha de creación (timestamp).
+  Y en el archivo /server/src/api/client.js configuramos la comunicación red del frontend con el backend, centralizando las peticiones HTTP usando fetch(), ademas del enlace URL al backend desplegado en Vercel para consumir la API REST.
 
 ---
 
