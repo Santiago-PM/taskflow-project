@@ -186,8 +186,8 @@ Se despliega separando el frontend y el backend en dos proyectos distintos de Ve
   Y en el archivo **/server/src/api/client.js** configuramos la comunicación red del frontend con el backend, centralizando las peticiones **HTTP** usando **fetch()**, ademas del **enlace URL** al backend desplegado en Vercel para consumir la **API REST**.
 
 ```bash
-git clone https://github.com/user/project.git
-cd project
+git clone https://github.com/Santiago-PM/taskflow-project
+cd taskflow-project
 ```
 
 ---
