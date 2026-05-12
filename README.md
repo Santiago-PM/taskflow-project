@@ -45,8 +45,6 @@ Este repositorio corresponde a un **proyecto de prácticas**, donde subo archivo
 - **Tareas:** se guardan en backend, en memoria del servidor (`server/services/task.service.js`).
 - **Tema oscuro/claro:** se guarda en `localStorage` con la clave `darkMode`.
 
-> Nota: al estar en memoria, si se reinicia el servidor las tareas se pierden. Es normal en esta versión.
-
 ### Reglas de validación de tareas (frontend)
 
 La validación se aplica al crear y editar:
