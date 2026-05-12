@@ -1,4 +1,6 @@
 
+## Documentación funcional del proyecto
+
 ## Reglas de validación en backend (API)
 
 Además de frontend, el backend vuelve a validar:
@@ -122,3 +124,5 @@ curl -X PATCH "https://taskflow-project-tawny.vercel.app/api/v1/tasks/1/status" 
 ```bash
 curl -X DELETE "https://taskflow-project-tawny.vercel.app/api/v1/tasks/1"
 ```
+
+*Desarrollado durante las prácticas en [Corner Estudios](https://www.corner-estudios.com) — Santiago — 2026*

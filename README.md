@@ -4,6 +4,7 @@
 ![CSS](https://img.shields.io/badge/CSS-639?style=for-the-badge&logo=css&logoColor=fff)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node-9acd32?style=for-the-badge&logo=node.js&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 # TASKFLOW by Santiago-PM
@@ -22,15 +23,15 @@ Este repositorio corresponde a un **proyecto de prácticas**, donde subo archivo
 
 ### Tecnologías utilizadas
 
-  Frontend
-  - HTML
-  - JavaScript
-  - TailwindCSS
-
-  Backend
-  - JSON
-  - Node.js
-  - 
+- HTML
+- JavaScript
+- TailwindCSS
+- JSON
+- JavaScript
+- Node.js
+- Thunder Client
+- Express
+- Vercel
 
 ### Funcionalidades
 
@@ -57,23 +58,27 @@ Esta es la estructura principal elegida:
 
 ```text
 taskflow-project/
-├─ app.js
+├─ README.md
+├─ app.js                         # Lógica del frontend y conexión con backend
 ├─ index.html
 ├─ style.css
 ├─ docs/
+│  ├─ design/                     # Imágenes del diseño de la web
+│  └─ ai/
 └─ server/
+   ├─ README.md                   # Documentación del backend
+   ├─ vercel.json                 # Configuración del despliegue en Vercel
+   ├─ package.json
    ├─ src/
-   │  ├─ index.js
+   │  ├─ index.js                 # Punto de entrada con el servidor
    │  ├─ api/
-   │  │  └─ client.js
-   │  ├─ config/
-   │  │  └─ env.js
+   │  │  └─ client.js             # Capa de acceso HTTP desde frontend a backend.
    │  ├─ controllers/
-   │  │  └─ task.controller.js
+   │  │  └─ task.controller.js    # Manejo de request/response y validación del body.
    │  └─ routes/
-   │     └─ task.routes.js
+   │     └─ task.routes.js        # Definición de los endpoints REST
    └─ services/
-      └─ task.service.js
+      └─ task.service.js          # Lógica de negocio y almacenamiento en memoria.
 ```
 
 ### Flujo principal de la aplicación (Frontend + Backend)
@@ -220,3 +225,7 @@ Se comprobó que el servidor MCP funcionaba correctamente realizando consultas c
 - Analizar código.
 
 El modelo respondió utilizando datos reales del proyecto, confirmando que MCP estaba activo.
+
+---
+
+*Desarrollado durante las prácticas en [Corner Estudios](https://www.corner-estudios.com) — Santiago — 2026*
