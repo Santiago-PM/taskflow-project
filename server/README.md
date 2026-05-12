@@ -1,4 +1,5 @@
-### Reglas de validación en backend (API)
+
+## Reglas de validación en backend (API)
 
 Además de frontend, el backend vuelve a validar:
 
