@@ -50,8 +50,6 @@ Este repositorio corresponde a un **proyecto de prácticas**, donde subo archivo
 
 ---
 
-## Documentación funcional del proyecto
-
 ## Arquitectura de carpetas
 
 Esta es la estructura principal elegida:
@@ -80,6 +78,7 @@ taskflow-project/
    └─ services/
       └─ task.service.js          # Lógica de negocio y almacenamiento en memoria.
 ```
+## Documentación funcional del proyecto
 
 ### Flujo principal de la aplicación (Frontend + Backend)
 
